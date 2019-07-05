@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<!-- 
+  20190710 2.0
+  Latest version: https://github.com/VenkataRaju/VenkataRaju.github.io/blob/master/utils/javascript/FFmpegCommandlineHelper.html
+-->
+<html>
+<head lang='en-US'>
+<meta charset='UTF-8' />
+<meta content='text/html; charset=UTF-8' http-equiv='content-type' />
+<title>FFmpeg Commandline Helper</title>
+<script>
+let simpleFiltering;
+
+class CommandCreator
+{
+  constructor(command = '')
+  {
+    this.cmdStr = command;
+  }
+
+  get command() { return this.cmdStr; }
+
+  append(condition, command = condition)
+  {
+    if (condition)
+    {
+      if (this.cmdStr)
+        this.cmdStr += ' ';
+      this.cmdStr += command;
+    }
+    return this;
+  }
+
+  appendRaw(str)
+  {
+    this.cmdStr += str;
+    return this;
+  }
+}
+
+function init()
+{
+  enableFilteringAndUpdateCmd();  
+}
+
+function enableFilteringAndUpdateCmd()
+{
+  simpleFiltering = useSimpleFilteringRB.checked;
+  disableInputs(!simpleFiltering, tTF);
+  disableInputs(simpleFiltering, useEndTimeInTrimRB, useDurationTimeInTrimRB);
+  inputTA.disabled = simpleFiltering;
+  enableAudioAndUpdateCmd(includeAudioCB);
+  enableSubtitlesAndUpdateCmd(includeSubtitlesCB);
+  enableScaleAndUpdateCmd(includeScaleCB);
+}
+
+function disableInputs(disable, ...inputs)
+{
+  for (let input of inputs)
+  {
+    input.disabled = disable;
+    input.labels[0].dataset.disabled = disable;
+  }
+}
+
+function enableAudioAndUpdateCmd(cb)
+{
+  let disabled = !cb.checked;
+  disableInputs(simpleFiltering || disabled, includeAudioSepRB, includeAudioCombinedRB, inputAudioTF);
+  updateCmd();  
+}
+
+function enableSubtitlesAndUpdateCmd(cb)
+{
+  let disabled = !cb.checked;
+  disableInputs(simpleFiltering || disabled, includeSubtitlesSepRB, includeSubtitlesCombinedRB, inputSubtitlesTF, subtitlesStyleTF);
+  disableInputs(disabled, inputSubtitlesTF, subtitlesStyleTF);
+  updateCmd();  
+}
+
+function enableScaleAndUpdateCmd(cb)
+{
+  let disabled = !cb.checked;
+  disableInputs(simpleFiltering || disabled, includeScaleSepRB, includeScaleCombinedRB, outputScaleTF);
+  disableInputs(disabled, outputScaleTF);
+  updateCmd();  
+}
+
+function updateCmd()
+{
+  msgDiv.style.visibility = 'hidden';
+  try
+  {
+    updateCmd0();
+  }
+  catch(e)
+  {
+    // console.log(e);
+    msgDiv.lastElementChild.textContent = e.message;
+    msgDiv.style.visibility = 'visible';
+  }
+
+  function updateCmd0()
+  {
+    for (let el of document.querySelectorAll('.error'))
+      el.classList.remove('error');
+
+    let ss = ssTF.value.trim();
+    let ssArr = validateTimeStampsAndParseToSecs(ss, ssTF);
+    if (ssArr)
+      require(ssArr.length === 1, ssTF, `Invalid input for -ss: '${ss}'`);
+    let ssInSecs = ssArr ? ssArr[0][1] : 0;
+
+    let t, tInSecs;
+    if (!tTF.disabled)
+    {
+      t = tTF.value.trim();
+      let tArr = validateTimeStampsAndParseToSecs(t, tTF);
+      if (tArr)
+      {  
+        require(tArr.length === 1, tTF, `Invalid input for -t: '${t}'`);
+        tInSecs = tArr[0][1];
+      }
+    }
+
+    let videoFileFileNameAndExtn = inputVideoTF.value.trim();
+    let [videoFileName, videoFileExtn] = fileNameAndExtension(videoFileFileNameAndExtn); 
+    require(videoFileName, inputVideoTF, 'Video file name is required');
+    require(videoFileExtn, inputVideoTF, 'Video file extension is required');
+
+    function fileNameAndExtension(fileNameWithExtn)
+    {
+      let fn = fileNameWithExtn.trim();
+      let len = fn.length;
+      let li = fn.lastIndexOf('.');
+      return [fn.substr(0, li === -1 ? len : li), fn.substr(li === -1 ? len : li + 1)]
+        .map(s => s.trim());
+    }
+
+    let isEndTime = useEndTimeInTrimRB.checked;
+    let endOrDurationStr = isEndTime ? 'end' : 'duration';
+
+    let audio = includeAudioCB.checked;
+    let sepAudio = includeAudioSepRB.checked;
+    let [audioFileName, audioFileExtn] = (!simpleFiltering && audio) ? fileNameAndExtension(inputAudioTF.value) : []; 
+    let audioFileNameGiven = audioFileName || audioFileExtn;
+    if (audioFileNameGiven)
+    {
+      require(audioFileName, includeAudioCB, 'Audio file name is required');
+      require(audioFileExtn, includeAudioCB, 'Audio file extension is required');
+    }
+    let audioFileIndex = audioFileNameGiven ? 1 : 0;
+
+    let subtitles = includeSubtitlesCB.checked;
+    let sepSubtitles = includeSubtitlesSepRB.checked;
+    let [subtitlesFileName, subtitlesFileExtn] = subtitles ? fileNameAndExtension(inputSubtitlesTF.value) : []; 
+    let subtitlesFileNameGiven = subtitlesFileName || subtitlesFileExtn;
+    let subtitlesFileIndex = subtitlesFileNameGiven ? (audioFileIndex + 1) : 0;
+    if (subtitles && (simpleFiltering || subtitlesFileNameGiven))
+    { // Incase of simple filtering we can't take subtitles from the video file(?) so force subtitles file name
+      require(subtitlesFileName, inputSubtitlesTF, 'Subtitles file name is required');
+      require(subtitlesFileExtn, inputSubtitlesTF, 'Subtitles file extension is required');
+    }
+
+    let subtitlesStyle = subtitlesStyleTF.value.trim();
+    if (subtitles)
+      require(!subtitlesStyle.includes(`'`), subtitlesStyleTF, `Invalid character quote(') in the 'Subtitles style' value`);
+    if (subtitlesStyle)
+      subtitlesStyle = `:force_style='${subtitlesStyle}'`;
+
+    let scale = includeScaleCB.checked;
+    let sepScale = includeScaleSepRB.checked;
+    let scaleValue;
+    if (scale)
+    {
+       scaleValue = outputScaleTF.value.trim();
+      require(scaleValue, outputScaleTF, 'Scale value is required');
+      require(/^((-[12])|([1-9]\d*)):((-[12])|([1-9]\d*))$/.test(scaleValue), outputScaleTF, 'Invalid scale value');
+    }
+
+    let timesArr;
+    if (!simpleFiltering)
+    {
+      timesArr = inputTA.value
+        .split(/\r?\n/)
+        .map(line => validateTimePairAndParseToSecs(line, inputTA))
+        .filter(v => v /* Ignore nulls */);
+      require(timesArr.length, inputTA, 'Time stamp pairs are required');
+    }
+
+    let cc = new CommandCreator('gffmpeg')
+      .append(ss, `-ss ${ss.replace(',', '.')}`)
+      .append(`-i "${videoFileName}.${videoFileExtn}"`)
+      .append(audioFileNameGiven, `-i "${audioFileName}.${audioFileExtn}"`);
+
+    if (simpleFiltering)
+    {
+      if (subtitles || scale)
+      {
+        let cmd = '-vf "';
+        if (scale)
+          cmd += `scale=${scaleValue}`;
+        if (subtitles)
+        {
+          cmd += (scale ? ',' : '') + 'subtitles=';
+          cmd += `${subtitlesFileName}.${subtitlesFileExtn}${subtitlesStyle}`;
+        }
+        cmd += '"';
+        cc.append(cmd);
+      }
+      cc.append(audio, '-af ""');
+      cc.append(t, `-t ${t.replace(',', '.')}`);
+    }
+    else
+    {
+      cc.append('\\\n  -lavfi "');
+
+      let clipNo = 0;
+
+      let  sub = (num1, num2) =>
+        {
+          let numStr = (num1 - num2).toFixed(6);
+          return numStr.replace(/\.?0+$/, ''); // Remove trailing zeros, include dot(.) if all are zeros
+        };
+
+      for (let [[startTimeStr, startTime], [endOrDurationTimeStr, endOrDurationTime]] of timesArr)
+      {
+        if (ss)
+          require(ssInSecs <= startTime, inputTA, `-ss[${ss}] should be <= startTime[${startTimeStr}]`);
+        if (isEndTime)
+          require(startTime < endOrDurationTime, inputTA, `startTime[${startTimeStr}] should be < endTime[${endOrDurationTimeStr}]`);
+        else
+          require(endOrDurationTime > 0, inputTA, `duration[${endOrDurationTimeStr}] should be > 0`);
+
+        clipNo++;
+
+        if (clipNo !== 1)
+          cc.appendRaw(';');
+
+        cc.appendRaw(`\n    [0:v]trim=start=${sub(startTime, ssInSecs)}:`)
+          .appendRaw(`${endOrDurationStr}=${isEndTime ? sub(endOrDurationTime, ssInSecs) : endOrDurationTime}`)
+          .appendRaw(`,setpts=PTS-STARTPTS`);
+
+        if (scale && sepScale)
+          cc.appendRaw(`,scale=${scaleValue}`);
+        if (subtitles && sepSubtitles)
+        {
+          cc.appendRaw(',subtitles=')
+            .appendRaw((subtitlesFileNameGiven ? `${subtitlesFileName}${clipNo}.${subtitlesFileExtn}` : `[${subtitlesFileIndex}:s]`))
+            .appendRaw(subtitlesStyle);
+        }
+        cc.appendRaw(`[v${clipNo}]`);
+
+        if (audio && sepAudio)
+        {
+          cc.appendRaw(`;\n    ${audioFileNameGiven ? '[1:a]' : '[0:a]'}`)
+            .appendRaw(`atrim=start=${sub(startTime, ssInSecs)}:`)
+            .appendRaw(`${endOrDurationStr}=${isEndTime ? sub(endOrDurationTime, ssInSecs) : endOrDurationTime}`)
+            .appendRaw(`,asetpts=PTS-STARTPTS[a${clipNo}]`);
+        }
+      }
+
+      if (clipNo > 1)
+      {
+        cc.appendRaw(';\n    ');
+        for (let i = 1; i <= clipNo; i++)
+        {
+          cc.appendRaw(`[v${i}]`);
+          if (audio && sepAudio)
+            cc.appendRaw(`[a${i}]`);
+        }
+        cc.appendRaw(`concat=n=${clipNo}${(audio && sepAudio) ? `:a=1` : ''}`)
+          .appendRaw(`[v${++clipNo}]${(audio && sepAudio) ? `[a${clipNo}]` : ''}`);
+      }
+
+      let moreVideoProcessing = (scale && !sepScale) || (subtitles && !sepSubtitles) || (scale && !sepScale); 
+      if (moreVideoProcessing)
+      {
+        cc.appendRaw(`;\n    [v${clipNo}]`);
+        let hasPreviousCommand = false;
+        if (scale && !sepScale)
+        {
+          cc.appendRaw(`scale=${scaleValue}`);
+          hasPreviousCommand = true;
+        }
+        if (subtitles && !sepSubtitles)
+        {
+          if (hasPreviousCommand)
+            cc.appendRaw(',');
+          cc.appendRaw('subtitles=')
+            .appendRaw(subtitlesFileNameGiven ? `${subtitlesFileName}.${subtitlesFileExtn}` : `[${subtitlesFileIndex}:s]`)
+            .appendRaw(subtitlesStyle);
+        }
+        cc.appendRaw(`[v${++clipNo}]`);
+      }
+      cc.appendRaw('" \\\n');
+      cc.appendRaw(`  -map [v${clipNo}]`);
+      if (audio)
+        cc.appendRaw(` -map ${sepAudio ? `[a${clipNo - (moreVideoProcessing ? 1 : 0)}]` : `${audioFileNameGiven ? `[1:a]` : `[0:a]`}`}`);
+    }
+
+    cc.append(`-f avi - | ffplay -i -`);
+    outputTA.value = cc.command;
+  }
+
+  // FIXME: errorMessage strings are evaluated eagerly
+  function require(value, el, errorMessage)
+  {
+    if (!value)
+    {
+      el.classList.add('error');
+      throw new Error(errorMessage);
+    }
+    return value;
+  }
+
+  function validateTimePairAndParseToSecs(line, el)
+  {
+    let arr = validateTimeStampsAndParseToSecs(line, el);
+    if (arr)
+      require(arr.length === 2, el, `Invalid line: '${line}'. It should have exactly two time stamps`);
+    return arr;
+  }
+
+  function validateTimeStampsAndParseToSecs(line, el)
+  {
+    line = line.trim();
+    if (!line.length)
+      return null;
+    require(/^[->\d:., \t]+$/.test(line), el,
+      `Invalid symbols in line: '${line}'. Valid symbols: digits, fullstop(.), comma(,), space and tab`);
+    let timeStampRegEx = /^\d+(:\d{1,2}){0,2}([.,]\d{1,6})?$/;
+    let arr = [];
+    for (let timeStampStr of line.split(/[->\s\t]+/).filter(str => str))
+    {
+      require(timeStampRegEx.test(timeStampStr), el, `Invalid time stamp: '${timeStampStr}'`);
+       arr.push([timeStampStr, toSecs(timeStampStr)]);
+     }
+     return arr;
+
+    /** In hh:mm:ss[.,]SSS format. */
+    function toSecs(timeStampStr)
+    {
+      let lTimeStampStr = timeStampStr.replace(',', '.');
+      let timeStamps = lTimeStampStr.split(':').map(str => +str);
+      // If only seconds are provided value can be >= 60
+      if (timeStamps.length > 1)
+      {
+        let part = timeStamps[timeStamps.length - 2];
+        require(part < 60, el, `Invalid value for minutes[${part}] in time stamp: '${timeStampStr}'`);
+        part = timeStamps[timeStamps.length - 1];
+        require(part < 60, el, `Invalid value for seconds[${part}] in time stamp: '${timeStampStr}'`);
+      }
+      return timeStamps.reduce((acc, cur) => (60 * acc) + cur, 0);
+    }
+  }
+}
+</script>
+<style>
+*
+{
+  background-color: #444;
+  color: #CCC;
+  font-size: 1.0rem;
+}
+#content { text-align: left; }
+#content > *
+{
+  width: 100%;
+  margin-top: 0.5rem;
+}
+input, textarea { border: 1px solid #AAA; }
+label { white-space: nowrap; }
+input { border-radius: 2px; }
+textarea { border-radius: 4px; }
+label[data-disabled=true] { color: darkgray; }
+input[type=text]:disabled,  textarea:disabled { background-color: #555; color: darkgray; }
+input[type=checkbox], input[type=radio] { vertical-align: text-bottom; }
+#configTbl td { padding: auto 0.2rem; }
+#configTbl td:nth-child(4) { text-align: right; }
+#ssTF, #tTF { width: 8rem; }
+#inputVideoTF, #inputAudioTF, #inputSubtitlesTF, #outputScaleTF {  width: 25rem; }
+#subtitlesStyleTF { width: 50rem; }
+.error { border-color: red; }
+</style>
+</head>
+<body style='text-align: center' onload='init()'>
+<div id='content' style='display: inline-block; width: 98vw;'>
+  <table id='configTbl' style='margin-left: auto; margin-right: auto; width: 0rem'>
+    <tr>
+      <td colspan='5' style='text-align: center; padding-bottom: 0.5rem'>
+        <label>-ss: <input id='ssTF' type='text' oninput='updateCmd()' /></label>&nbsp;
+        <label>Video file name: <input id='inputVideoTF' autofocus type='text' oninput='updateCmd()' /></label>&nbsp;
+        <label>-t: <input id='tTF' type='text' oninput='updateCmd()' /></label>
+      </td>
+    </tr>
+    <tr>
+      <td colspan='5'>
+        <label><input id='useSimpleFilteringRB' type='radio' name='SimpleComplexFiltering' checked oninput='enableFilteringAndUpdateCmd()' /> Simple filtering</label>
+        <label><input type='radio' name='SimpleComplexFiltering' oninput='enableFilteringAndUpdateCmd()' /> Complex filtering</label>
+      </td>
+    </tr><tr>
+      <td colspan='5'>
+        <label><input id='useEndTimeInTrimRB' type='radio' name='StartToEndOrDuration' checked oninput='updateCmd()' /> Trim time in Start and End</label>
+        <label><input id='useDurationTimeInTrimRB' type='radio' name='StartToEndOrDuration' oninput='updateCmd()' /> Trim time in Start and Duration</label>
+      </td>
+    </tr><tr>
+      <td><label><input id='includeAudioCB' type='checkbox' checked oninput='enableAudioAndUpdateCmd(this)' /> Audio</label></td>
+      <td><label><input id='includeAudioSepRB' type='radio' name='SeparateOrSingleAudio' checked oninput='updateCmd()' /> Separate Audio for each clip</label></td>
+      <td><label><input id='includeAudioCombinedRB' type='radio' name='SeparateOrSingleAudio' oninput='updateCmd()' /> Combined Audio</label></td>
+      <td>&nbsp;<label for='inputAudioTF'>Audio file name: </label></td>
+      <td><input id='inputAudioTF' type='text' 
+        title='Same file will be used for separate or combined audio as atrim filter supports start and end attributes'
+        oninput='updateCmd()' /></td>
+    </tr><tr>  
+      <td><label><input id='includeSubtitlesCB' type='checkbox' checked oninput='enableSubtitlesAndUpdateCmd(this)' /> Subtitles</label></td>
+      <td><label><input id='includeSubtitlesSepRB' type='radio' name='SeparateOrSingleSubtitles' oninput='updateCmd()' /> Separate Subtitles file for each clip</label></td>
+      <td><label><input id='includeSubtitlesCombinedRB' type='radio' name='SeparateOrSingleSubtitles' checked oninput='updateCmd()' /> Combined Subtitles file</label></td>
+      <td>&nbsp;<label for='inputSubtitlesTF'>Subtitles file name: </label></td>
+      <td><input id='inputSubtitlesTF' type='text' 
+        title='For multiple (separate) files just provides common prefix and suffix(exension). Numbers starting with 1 will be added automatically. This is because subtitles filter does not support start and end attributes' 
+        value='s.srt' oninput='updateCmd()' /></td>
+    </tr><tr>  
+      <td colspan='5'>
+        <input type='checkbox' style='visibility: hidden' />
+        <label>Subtitles style: <input id='subtitlesStyleTF' type='text' value='FontSize=22,PrimaryColour=&H0000FFFF' oninput='updateCmd()' /></label>
+      </td>
+    </tr><tr>
+      <td><label><input id='includeScaleCB' type='checkbox' checked oninput='enableScaleAndUpdateCmd(this)' /> Scale</label></td>
+      <td><label><input id='includeScaleSepRB' type='radio' name='SeparateOrSingleScale' oninput='updateCmd()' /> Separate</label></td>
+      <td><label><input id='includeScaleCombinedRB' type='radio' name='SeparateOrSingleScale' checked oninput='updateCmd()' /> Combined</label></td>
+      <td>&nbsp;<label for='outputScaleTF'>&nbsp;Scale: </label></td>
+      <td><input id='outputScaleTF' type='text' placeholder='e.g. 640:360'
+        oninput='updateCmd()' value='-2:480' /></td>
+    </tr>
+  </table>
+  <div id='msgDiv' style='text-align: left'><span style='font-size: 1.3rem; color: red'>Error: </span><span></span></div>
+  <textarea id='inputTA' placeholder='One clip start time (e.g. 01:20:58.400) and end/duration time in each line' rows='5' style='width: 100%' oninput='updateCmd()'></textarea>
+  <textarea id='outputTA' placeholder='Output' style='width: 100%' rows='12'></textarea>
+</div>
+</body>
+</html>
