@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Location Reader</title>
+<style>
+*, *::before, *::after
+{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: black;
+  color: white;
+}
+body
+{
+  padding: 0.2rem;
+  text-align: center;
+}
+.hcenter
+{
+  text-align: center;
+}
+</style>
+<script>
+
+function toStrEvent(e)
+{
+  let obj = {};
+  for (let k in e)
+    obj[k] = e[k];
+  return JSON.stringify(obj, (k, v) =>
+  {
+    return (v instanceof Node)   ? 'Node'   :
+           (v instanceof Window) ? 'Window' : v; 
+  }, 1);
+}
+
+let log;
+
+ael(window, 'error', e =>
+{
+  let msg = `Uncaught Global Error: "${e.stack}"`;
+  alert(msg);
+  log && log(msg);
+});
+
+function ael(el, eventName, listener, options)
+{
+  el.addEventListener(eventName, e =>
+  {
+    try { listener(e.target); }
+    catch (e) { log(`Uncaught error from listener on element with id "${el.id}" ${e.stack}`); }
+  }, options);
+  return listener;
+}
+
+// Call and add evnt listener. Useful for input fields
+function cael(el, eventName, listener, options)
+{
+  try { listener(el, true /* init */ ); }
+  catch (e) { log(`Uncaught error from listener on element with id "${el.id}" ${e.stack}`); }
+  return ael(el, eventName, listener, options);
+}
+
+class Logger
+{
+  constructor(el)
+  {
+    this.first = true;
+    this.el = el;
+  }
+
+  log(...lineparts)
+  {
+    if (this.first)
+      this.first = false;
+    else
+    {
+      this.el.appendChild(
+        document.createElement('br'));
+    }
+
+    let tn = document.createTextNode(
+      lineparts.join(' '));
+    this.el.appendChild(tn);  
+  }
+
+  reset()
+  {
+    this.first = true;
+    this.el.textContent = '';
+  }
+}
+
+function init()
+{
+  let logger = new Logger(output);
+  let log = logger.log.bind(logger);
+
+  log (344);
+}
+</script>
+</head>
+<body onload="init()">
+<br><br>
+<div>Hello</div>
+</body>
+</html>
