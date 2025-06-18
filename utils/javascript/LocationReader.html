@@ -21,12 +21,62 @@ body
   padding: 0.2rem;
   text-align: center;
 }
+button
+{
+  border-radius: .4rem;
+  padding: 0.2rem 0.8rem;
+  font-size: 1rem;
+  background: repeating-linear-gradient(0deg, #999, #666, #999);
+}
+button:enabled:hover
+{
+  background: repeating-linear-gradient(0deg, #AAA, #555, #AAA);
+}
+button:enabled:active
+{
+  background: repeating-linear-gradient(0deg, #BBB, #444, #BBB);
+}
+button:disabled
+{
+  color: #BBB;
+}
+#locationInfoTA
+{
+  width: 100%;
+  height: 100rem;
+  padding: .4rem;
+  border: .2rem solid lightgrey;
+  border-radius: .4rem;
+  resize: vertical;
+}  
 .hcenter
 {
   text-align: center;
 }
 </style>
 <script>
+let logger, log, logjs; // initialized in init () function
+
+ael (window, 'error', (el, isInit, event) =>
+{
+  let msg = `Uncaught Global Error: "${event.stack}"`;
+  alert (msg);
+  log && log (msg);
+});
+
+function ael (el, eventName, listener, options)
+{
+  let listenerWithTry = (ev, el, isInit) =>
+  {
+    try { listener (ev?.target ?? el, isInit, ev); }
+    catch (e)
+    {
+      log (`Uncaught error from listener on element with id "${el.id}", tagName: "${el.tagName}". ${e.stack}`);
+    }
+  };
+  el.addEventListener (eventName, listenerWithTry, options);
+  return listenerWithTry;
+}
 
 function toStrEvent(e)
 {
@@ -38,34 +88,6 @@ function toStrEvent(e)
     return (v instanceof Node)   ? 'Node'   :
            (v instanceof Window) ? 'Window' : v; 
   }, 1);
-}
-
-let log;
-
-ael(window, 'error', (el, ev) =>
-{
-  let msg = `4 Uncaught Global Error: "${ev.stack}"`;
-  alert (msg);
-  log && log (msg);
-});
-
-function ael (el, eventName, listener, options)
-{
-  el.addEventListener(eventName, e =>
-  {
-    let el = e.target;
-    try { listener (el, e); }
-    catch (e) { log(`Uncaught error from listener on element with id "${el.id}" ${e.stack}`); }
-  }, options);
-  return listener;
-}
-
-// Call and add evnt listener. Useful for input fields
-function cael(el, eventName, listener, options)
-{
-  try { listener(el, true /* init */ ); }
-  catch (e) { log(`Uncaught error from listener on element with id "${el.id}" ${e.stack}`); }
-  return ael(el, eventName, listener, options);
 }
 
 class Logger
