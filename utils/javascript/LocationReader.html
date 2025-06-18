@@ -120,7 +120,7 @@ class Logger
   }
 }
 
-let geoLoc = navigator.geolocation;
+let geoLoc = navigator.geolocation, watchPosId;
 function captureCurrentLocation ()
 {
   captureBtn.disabled = true;
@@ -158,6 +158,9 @@ function init()
 <body onload="init()">
 <br><br>
 <label>Geolocation permission</label><span id="locationPermissionEl"></span>
+<br><br>
+<label><input type="checkbox" id="watchPosotionCb" /> Watch Position</label><span id="currentPosEl">N/A</span>
+<br><br>
 <button id="captureBtn">Capture current location</button>
 <button id="captureBtn">Replace last captured Location with the current one</button>
 <br><br>
