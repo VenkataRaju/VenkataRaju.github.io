@@ -150,7 +150,7 @@ function geoLocSuccess (pos)
     readTimeAgoEl.style.visibility = 'hidden';
   }
 
-  ta.append (`${posText}\n`);
+  locationInfoTA‎.append (`${posText}\n`);
   captureBtn.disabled = false;
 }
 
@@ -203,7 +203,7 @@ function init()
 </head>
 <body onload="init()">
 <br><br>
-<label>Geolocation permission: </label><span id="locationPermissionEl">N/A</span>
+<label>0 Geolocation permission: </label><span id="locationPermissionEl">N/A</span>
 <br><br>
 <label><input type="checkbox" id="watchPositionCb" /> Watch Position.</label>
 <label>Position: </label><span id="currentPosEl">N/A</span>
