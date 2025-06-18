@@ -126,15 +126,19 @@ function captureCurrentLocation ()
   captureBtn.disabled = true;
   geoLoc.getCurrentPosition ((pos) =>
   {
-    let coords = pos.coords;
-    let lat = coords.latitude;
-    let lng = coords.longitude;
-    ta.append (`${lat} ${lng}\n`);
+     let { timestamp } = pos; 
+    let { latitude, longitude, accuracy /* in meters */, headingFromNorth, speed /* meters */ } coords = pos.coords;
+    ta.append (`${latitude} ${longitude} ${accuracy}\n`);
     captureBtn.disabled = false;
   }, (err) =>
   {
     log (`An error occured. Code: "${err.code}", Message: "${err.message}"`);
     captureBtn.disabled = false;
+  },
+  {
+    maximumAge: 0 /* no cache */,
+    timeout: 800 /* millis */,
+    enableHighAccuracy: true /* needed to measure accurate disance, though it consumes more power  */
   }); 
 }
  
@@ -142,15 +146,20 @@ function init()
 {
   let logger = new Logger (output);
   let log = logger.log.bind(logger);
-
+  (async () =>
+  {
+    let result = await navigator.permissions.query({ name: 'geolocation' });
+    locationPermissionEl.textContent = result.state;
+  })();
   ael (captureBtn, 'click', captureCurrentLocation);
 }
 </script>
 </head>
 <body onload="init()">
 <br><br>
+<label>Geolocation permission</label><span id="locationPermissionEl"></span>
 <button id="captureBtn">Capture current location</button>
-<button id="captureBtn">Replace last captured Location with the current</button>
+<button id="captureBtn">Replace last captured Location with the current one</button>
 <br><br>
 <textarea id="locationInfoTA"></textarea>
 <br><br>
