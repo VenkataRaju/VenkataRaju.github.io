@@ -43,7 +43,7 @@ button:disabled
 #locationInfoTA
 {
   width: 80%;
-  height: 80rem;
+  height: 20rem;
   padding: .4rem;
   border: .2rem solid lightgrey;
   border-radius: .4rem;
@@ -154,7 +154,7 @@ function geoLocSuccess (pos)
   captureBtn.disabled = false;
 }
 
-function geoLocFailure (err) =>
+function geoLocFailure (err)
 {
   log (`An error occured. Code: "${err.code}", Message: "${err.message}"`);
   captureBtn.disabled = false;
@@ -172,9 +172,12 @@ function init()
 {
   let logger = new Logger (output);
   let log = logger.log.bind(logger);
+
+  log (`0 init start`);
   
   (async () =>
   {
+    log ('Reading permission....');
     let result = await navigator.permissions.query ({ name: 'geolocation' });
     locationPermissionEl.textContent = result.state;
   })();
