@@ -127,7 +127,7 @@ function captureCurrentLocation (e, replaceLast)
 {
   if (!geoLoc)
   {
-    log ('Geolocation not availabavailable'le');
+    log ('Geolocation not availabavailable');
     return;
   }
   let successFun = replaceLast ? bindTrailingArgs (geoLocSucces, true) : geoLocSuccess;
@@ -209,7 +209,7 @@ function init()
 </head>
 <body onload="init()">
 <br><br>
-<label>4 Geolocation permission: </label><span id="locationPermissionEl">N/A</span>
+<label>5 Geolocation permission: </label><span id="locationPermissionEl">N/A</span>
 <br><br>
 <label><input type="checkbox" id="watchPositionCb" /> Watch Position.</label>
 <label>Position: </label><span id="currentPosEl">N/A</span>
