@@ -41,7 +41,7 @@ let log;
 
 ael(window, 'error', (el, ev) =>
 {
-  let msg = `1 Uncaught Global Error: "${ev.stack}"`;
+  let msg = `3 Uncaught Global Error: "${ev.stack}"`;
   alert (msg);
   log && log (msg);
 });
@@ -95,17 +95,33 @@ class Logger
   }
 }
 
+let geoLoc = navigator.geolocation;
+function captureCurrentLocation ()
+{
+  geoLoc.getCurrentPosition ((pos) =>
+  {
+    let coords = pos.coords;
+    let lat = coords.latitude;
+    let lng = coords.longitude;
+    ta.append (`${lat} ${lng}\n`);
+  }, () =>
+  {
+    log (`An error occured`);
+  }); 
+}
+ 
 function init()
 {
   let logger = new Logger (output);
   let log = logger.log.bind(logger);
 
-  log (344);
+  ael (captureBtn, 'click', captureCurrentLocation);
 }
 </script>
 </head>
 <body onload="init()">
 <br><br>
+<button id="captureBtn">Capture Now</button>
 <div>Hello</div>
 <br>
 <div id="output"></div>
