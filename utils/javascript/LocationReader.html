@@ -177,8 +177,8 @@ fuction updateTimeAgo ()
 function init()
 {
   alert (1);
-  let logger = new Logger (output);
-  let log = logger.log.bind (logger);
+  logger = new Logger (output);
+  log = logger.log.bind (logger);
 
   log (`1 init start`);
   alert (2);
@@ -211,7 +211,7 @@ function init()
 </head>
 <body onload="init()">
 <br><br>
-<label>2 Geolocation permission: </label><span id="locationPermissionEl">N/A</span>
+<label>3 Geolocation permission: </label><span id="locationPermissionEl">N/A</span>
 <br><br>
 <label><input type="checkbox" id="watchPositionCb" /> Watch Position.</label>
 <label>Position: </label><span id="currentPosEl">N/A</span>
