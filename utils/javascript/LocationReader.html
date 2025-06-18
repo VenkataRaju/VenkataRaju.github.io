@@ -156,8 +156,12 @@ function geoLocSuccess (pos, replaceLast)
   }
   
   if (replaceLast)
-    locationInfoTA.append (`Replace`);
-
+  {
+    let text = locationInfoTA.value, tl = text.length;
+    let li = text.lastIndexOf ('\n', text.length - 2);
+    if (li !== -1)
+      locationInfoTA.setRangeText ('', li + 1, tl);
+  }
   locationInfoTA.append (`${posText}\n`);
   captureBtn.disabled = false;
 }
