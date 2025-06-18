@@ -120,7 +120,7 @@ class Logger
   }
 }
 
-let geoLoc = navigator.geolocation, watchPosId = 0;
+let geoLoc = navigator.geolocation, watchPosId = 0, lastReadTime;
 let geoLocOptions =
 {
   maximumAge: 0 /* no cache */,
@@ -136,11 +136,20 @@ function captureCurrentLocation ()
 
 function geoLocSuccess (pos)
 {
-  let { timestamp } = pos; 
+  lastReadTime = pos.timestamp;
   let { latitude, longitude, accuracy /* in meters */, headingFromNorth, speed /* meters */ } coords = pos.coords;
   let text = `${latitude} ${longitude}`;
+
   if (watchPositionCb.checked)
+  {
     currentPosEl.textContent = `${posText} ${accuracy}m`;
+  }
+  else
+  {
+    currentPosEl.textContent = 'N/A';
+    readTimeAgoEl.style.visibility = 'hidden';
+  }
+
   ta.append (`${posText}\n`);
   captureBtn.disabled = false;
 }
@@ -149,6 +158,14 @@ function geoLocFailure (err) =>
 {
   log (`An error occured. Code: "${err.code}", Message: "${err.message}"`);
   captureBtn.disabled = false;
+}
+
+fuction updateTimeAgo ()
+{
+  if (!lastReadTime)
+    return;
+  let seconds =  ~~ ((Date.now () - lastReadTime) / 1000);
+  readTimeAgoEl.textContent = `${seconds} seconds ago`;
 }
   
 function init()
@@ -164,10 +181,17 @@ function init()
   
   ael (watchPositionCb, 'change', el =>
   {
-    if (watchPosId)
+    if (timerId)
+    {
+      clearInterval (timerId);
+      timerId = 0;
       geoLoc.clearWatch (watchPosId);
+    }
     if (el.checked)
+    {
       watchPosId = geoLoc.watchPosition (geoLocSuccess, geoLocFailure, geoLocOptions);
+      timerId = setInterval (updateTimeAgo, 400);
+    }
   });
 
   ael (captureBtn, 'click', captureCurrentLocation);
@@ -178,7 +202,9 @@ function init()
 <br><br>
 <label>Geolocation permission</label><span id="locationPermissionEl"></span>
 <br><br>
-<label><input type="checkbox" id="watchPositionCb" /> Watch Position</label><span id="currentPosEl">N/A</span>
+<label><input type="checkbox" id="watchPositionCb" /> Watch Position</label>
+<span id="currentPosEl">N/A</span>
+<span id="readTimeAgoEl">N/A</span>
 <br><br>
 <button id="captureBtn">Capture current location</button>
 <button id="captureBtn">Replace last captured Location with the current one</button>
