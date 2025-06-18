@@ -42,8 +42,8 @@ button:disabled
 }
 #locationInfoTA
 {
-  width: 100%;
-  height: 100rem;
+  width: 80%;
+  height: 80rem;
   padding: .4rem;
   border: .2rem solid lightgrey;
   border-radius: .4rem;
@@ -200,11 +200,11 @@ function init()
 </head>
 <body onload="init()">
 <br><br>
-<label>Geolocation permission</label><span id="locationPermissionEl"></span>
+<label>Geolocation permission: </label><span id="locationPermissionEl">N/A</span>
 <br><br>
-<label><input type="checkbox" id="watchPositionCb" /> Watch Position</label>
-<span id="currentPosEl">N/A</span>
-<span id="readTimeAgoEl">N/A</span>
+<label><input type="checkbox" id="watchPositionCb" /> Watch Position.</label>
+<label>Position: </label><span id="currentPosEl">N/A</span>
+<label>Updated: </label><span id="readTimeAgoEl">N/A</span>
 <br><br>
 <button id="captureBtn">Capture current location</button>
 <button id="captureBtn">Replace last captured Location with the current one</button>
