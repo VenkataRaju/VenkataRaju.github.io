@@ -78,12 +78,12 @@ function ael (el, eventName, listener, options)
   return listenerWithTry;
 }
 
-function toStrEvent(e)
+function toStrEvent (e)
 {
   let obj = {};
   for (let k in e)
     obj[k] = e[k];
-  return JSON.stringify(obj, (k, v) =>
+  return JSON.stringify (obj, (k, v) =>
   {
     return (v instanceof Node)   ? 'Node'   :
            (v instanceof Window) ? 'Window' : v; 
@@ -92,7 +92,7 @@ function toStrEvent(e)
 
 class Logger
 {
-  constructor(el)
+  constructor (el)
   {
     this.first = true;
     this.el = el;
@@ -109,8 +109,8 @@ class Logger
     }
 
     let tn = document.createTextNode(
-      lineparts.join(' '));
-    this.el.appendChild(tn);  
+      lineparts.join(', '));
+    this.el.appendChild (tn);  
   }
 
   reset()
@@ -133,7 +133,7 @@ function captureCurrentLocation ()
     captureBtn.disabled = false;
   }, (err) =>
   {
-    log (`An error occured. Code "${err.code}", Message "${err.message}"`);
+    log (`An error occured. Code: "${err.code}", Message: "${err.message}"`);
     captureBtn.disabled = false;
   }); 
 }
@@ -149,9 +149,10 @@ function init()
 </head>
 <body onload="init()">
 <br><br>
-<button id="captureBtn">Capture Location Now</button>
+<button id="captureBtn">Capture current location</button>
+<button id="captureBtn">Replace last captured Location with the current</button>
 <br><br>
-<textarea id="ta"></textarea>
+<textarea id="locationInfoTA"></textarea>
 <br><br>
 <div id="output"></div>
 </body>
