@@ -37,7 +37,7 @@ button:disabled
 {
   color: #BBB;
 }
-#locationInfoTA, #output
+#locationInfoTA, #outputEl
 {
   display: inline-block;
   width: 80%;
@@ -46,7 +46,11 @@ button:disabled
   border: .2rem solid lightgrey;
   border-radius: .4rem;
   resize: vertical;
-}  
+}
+#outputEl
+{
+  text-align: left;
+}
 .hcenter
 {
   text-align: center;
@@ -209,7 +213,7 @@ function init()
 </head>
 <body onload="init()">
 <br><br>
-<label>6 Geolocation permission: </label><span id="locationPermissionEl">N/A</span>
+<label>7 Geolocation permission: </label><span id="locationPermissionEl">N/A</span>
 <br><br>
 <label><input type="checkbox" id="watchPositionCb" /> Watch Position.</label>
 <label>Position: </label><span id="currentPosEl">N/A</span>
