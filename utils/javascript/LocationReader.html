@@ -123,10 +123,10 @@ function calculatePolygonArea (coordinates)
     return 0;
   
   let area = 0;
-  for (let i = 0, len = coordinates.length; i++)
+  for (let i = 0, len = coordinates.length; i < len; i++)
   {
      let [ lat1, lng1 ] = coordinates[i];
-     let [ lat2, lng2 } = coordinates[i + 1];
+     let [ lat2, lng2 ] = coordinates[i + 1];
      area += toRadians (lng2 - lng1)
        * (2 + Math.sin (toRadians (lat1)) + Math.sin (toRadians (lat2)));
   }
@@ -210,7 +210,7 @@ function init()
   logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`3 init start`);
+  log (`4 init start`);
   (async () =>
   {
     log ('Reading permission....');
