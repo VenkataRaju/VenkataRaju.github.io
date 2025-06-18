@@ -188,10 +188,15 @@ function init()
   log (`2 init start`);
   (async () =>
   {
-    log ('1 Reading permission....');
+    log ('2 Reading permission....');
     let result = await navigator.permissions.query ({ name: 'geolocation' });
-    log (resut);
-    locationPermissionEl.textContent = result.state;
+    let state = result.state;
+    if (state === 'denied')
+    {
+      for (let el of [watchPositionCb, captureBtn, replaceCaptureBtn])
+        el.disabled = true;
+    }
+    locationPermissionEl.textContent = state;
   })();
   
   ael (watchPositionCb, 'change', el =>
