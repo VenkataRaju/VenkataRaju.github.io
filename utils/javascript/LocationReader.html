@@ -56,6 +56,10 @@ button:disabled
 {
   text-align: center;
 }
+.error
+{
+  color: red;
+}
 </style>
 <script>
 let logger, log; // initialized in init () function
@@ -220,6 +224,7 @@ function init()
     {
       for (let el of [watchPositionCb, captureBtn, replaceCaptureBtn])
         el.disabled = true;
+      locationPermissionEl.classList.add ('error');  
     }
     locationPermissionEl.textContent = state;
   })();
