@@ -120,37 +120,56 @@ class Logger
   }
 }
 
-let geoLoc = navigator.geolocation, watchPosId;
+let geoLoc = navigator.geolocation, watchPosId = 0;
+let geoLocOptions =
+{
+  maximumAge: 0 /* no cache */,
+  timeout: 1200 /* millis */,
+  enableHighAccuracy: true /* needed to measure accurate disance, though it consumes more power  */
+};
+
 function captureCurrentLocation ()
 {
   captureBtn.disabled = true;
-  geoLoc.getCurrentPosition ((pos) =>
-  {
-     let { timestamp } = pos; 
-    let { latitude, longitude, accuracy /* in meters */, headingFromNorth, speed /* meters */ } coords = pos.coords;
-    ta.append (`${latitude} ${longitude} ${accuracy}\n`);
-    captureBtn.disabled = false;
-  }, (err) =>
-  {
-    log (`An error occured. Code: "${err.code}", Message: "${err.message}"`);
-    captureBtn.disabled = false;
-  },
-  {
-    maximumAge: 0 /* no cache */,
-    timeout: 800 /* millis */,
-    enableHighAccuracy: true /* needed to measure accurate disance, though it consumes more power  */
-  }); 
+  geoLoc.getCurrentPosition (geoLocSuccess, geoLocFailure, geoLocOptions); 
 }
- 
+
+function geoLocSuccess (pos)
+{
+  let { timestamp } = pos; 
+  let { latitude, longitude, accuracy /* in meters */, headingFromNorth, speed /* meters */ } coords = pos.coords;
+  let text = `${latitude} ${longitude}`;
+  if (watchPositionCb.checked)
+    currentPosEl.textContent = `${posText} ${accuracy}m`;
+  ta.append (`${posText}\n`);
+  captureBtn.disabled = false;
+}
+
+function geoLocFailure (err) =>
+{
+  log (`An error occured. Code: "${err.code}", Message: "${err.message}"`);
+  captureBtn.disabled = false;
+}
+  
 function init()
 {
   let logger = new Logger (output);
   let log = logger.log.bind(logger);
+  
   (async () =>
   {
-    let result = await navigator.permissions.query({ name: 'geolocation' });
+    let result = await navigator.permissions.query ({ name: 'geolocation' });
     locationPermissionEl.textContent = result.state;
   })();
+  
+  ael (watchPositionCb, 'change', el =>
+  {
+    if (watchPosId)
+      geoLoc.clearWatch (watchPosId);
+    if (el.checked)
+      watchPosId = geoLoc.watchPosition (geoLocSuccess, geoLocFailure, geoLocOptions);
+  });
+
   ael (captureBtn, 'click', captureCurrentLocation);
 }
 </script>
@@ -159,7 +178,7 @@ function init()
 <br><br>
 <label>Geolocation permission</label><span id="locationPermissionEl"></span>
 <br><br>
-<label><input type="checkbox" id="watchPosotionCb" /> Watch Position</label><span id="currentPosEl">N/A</span>
+<label><input type="checkbox" id="watchPositionCb" /> Watch Position</label><span id="currentPosEl">N/A</span>
 <br><br>
 <button id="captureBtn">Capture current location</button>
 <button id="captureBtn">Replace last captured Location with the current one</button>
