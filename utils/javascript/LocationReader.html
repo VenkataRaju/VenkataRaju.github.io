@@ -90,6 +90,11 @@ function toStrEvent (e)
   }, 1);
 }
 
+function bindTrailingArgs (fun, ...trailingArgs)
+{
+  return (...args) => fun.call (null, ...args, ...trailingArgs);
+}
+  
 class Logger
 {
   constructor (el)
@@ -131,15 +136,16 @@ let geoLocOptions =
   enableHighAccuracy: true /* needed to measure accurate disance, though it consumes more power  */
 };
 
-function captureCurrentLocation ()
+function captureCurrentLocation (e, replaceLast)
 {
   if (!geoLoc)
   {
-    log ('Geolocation not available');
+    log ('Geolocation not availabavailable'le');
     return;
   }
+  let successFun = replaceLast ? bindTrailingArgs (geoLocSucces, true) :geoLocSuccess;
   captureBtn.disabled = true;
-  geoLoc.getCurrentPosition (geoLocSuccess, geoLocFailure, geoLocOptions); 
+  geoLoc.getCurrentPosition (successFun, geoLocFailure, geoLocOptions); 
 }
 
 function geoLocSuccess (pos)
@@ -179,9 +185,9 @@ fuction updateTimeAgo ()
 function init()
 {
   let logger = new Logger (output);
-  let log = logger.log.bind(logger);
+  let log = logger.log.bind (logger);
 
-  log (`0 init start`);
+  log (`1 init start`);
   
   (async () =>
   {
@@ -206,19 +212,20 @@ function init()
   });
 
   ael (captureBtn, 'click', captureCurrentLocation);
+  ael (replaceCaptureBtn, 'click', bindTrailingArgs (captureCurrentLocation, true));
 }
 </script>
 </head>
 <body onload="init()">
 <br><br>
-<label>0 Geolocation permission: </label><span id="locationPermissionEl">N/A</span>
+<label>1 Geolocation permission: </label><span id="locationPermissionEl">N/A</span>
 <br><br>
 <label><input type="checkbox" id="watchPositionCb" /> Watch Position.</label>
 <label>Position: </label><span id="currentPosEl">N/A</span>
 <label>Updated: </label><span id="readTimeAgoEl">N/A</span>
 <br><br>
 <button id="captureBtn">Capture current location</button>
-<button id="captureBtn">Replace last captured Location with the current one</button>
+<button id="replaceCaptureBtn">Replace last captured Location with the current one</button>
 <br><br>
 <textarea id="locationInfoTA"></textarea>
 <br><br>
