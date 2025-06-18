@@ -1,6 +1,9 @@
 <!doctype html>
 <html>
 <head>
+<meta http-equiv='cache-control' content='no-cache'> 
+<meta http-equiv='expires' content='0'> 
+<meta http-equiv='pragma' content='no-cache'>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Location Reader</title>
@@ -41,7 +44,7 @@ let log;
 
 ael(window, 'error', (el, ev) =>
 {
-  let msg = `3 Uncaught Global Error: "${ev.stack}"`;
+  let msg = `4 Uncaught Global Error: "${ev.stack}"`;
   alert (msg);
   log && log (msg);
 });
@@ -98,15 +101,18 @@ class Logger
 let geoLoc = navigator.geolocation;
 function captureCurrentLocation ()
 {
+  captureBtn.disabled = true;
   geoLoc.getCurrentPosition ((pos) =>
   {
     let coords = pos.coords;
     let lat = coords.latitude;
     let lng = coords.longitude;
     ta.append (`${lat} ${lng}\n`);
-  }, () =>
+    captureBtn.disabled = false;
+  }, (err) =>
   {
-    log (`An error occured`);
+    log (`An error occured. Code "${err.code}", Message "${err.msg}"`);
+    captureBtn.disabled = false;
   }); 
 }
  
@@ -121,10 +127,10 @@ function init()
 </head>
 <body onload="init()">
 <br><br>
-<button id="captureBtn">Capture Now</button>
-<br>
+<button id="captureBtn">Capture Location Now</button>
+<br><br>
 <textarea id="ta"></textarea>
-<br>
+<br><br>
 <div id="output"></div>
 </body>
 </html>
