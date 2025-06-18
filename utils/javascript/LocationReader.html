@@ -41,7 +41,7 @@ let log;
 
 ael(window, 'error', (el, ev) =>
 {
-  let msg = `2 Uncaught Global Error: "${ev.stack}"`;
+  let msg = `1 Uncaught Global Error: "${ev.stack}"`;
   alert (msg);
   log && log (msg);
 });
@@ -97,7 +97,7 @@ class Logger
 
 function init()
 {
-  let logger = new Logger(output);
+  let logger = new Logger (output);
   let log = logger.log.bind(logger);
 
   log (344);
@@ -107,5 +107,7 @@ function init()
 <body onload="init()">
 <br><br>
 <div>Hello</div>
+<br>
+<div id="output"></div>
 </body>
 </html>
