@@ -26,21 +26,21 @@ button
   border-radius: .4rem;
   padding: 0.2rem 0.8rem;
   font-size: 1rem;
-  background: repeating-linear-gradient (0deg, #999, #666, #999);
+  background: repeating-linear-gradient(0deg, #999, #666, #999);
 }
 button:enabled:hover
 {
-  background: repeating-linear-gradient (0deg, #AAA, #555, #AAA);
+  background: repeating-linear-gradient(0deg, #AAA, #555, #AAA);
 }
 button:enabled:active
 {
-  background: repeating-linear-gradient (0deg, #BBB, #444, #BBB);
+  background: repeating-linear-gradient(0deg, #BBB, #444, #BBB);
 }
 button:disabled
 {
   color: #BBB;
 }
-#locationInfoTA
+#locationInfoTA, #output
 {
   width: 80%;
   height: 20rem;
@@ -211,7 +211,7 @@ function init()
 </head>
 <body onload="init()">
 <br><br>
-<label>1 Geolocation permission: </label><span id="locationPermissionEl">N/A</span>
+<label>2 Geolocation permission: </label><span id="locationPermissionEl">N/A</span>
 <br><br>
 <label><input type="checkbox" id="watchPositionCb" /> Watch Position.</label>
 <label>Position: </label><span id="currentPosEl">N/A</span>
