@@ -176,11 +176,12 @@ fuction updateTimeAgo ()
   
 function init()
 {
+  alert (1);
   let logger = new Logger (output);
   let log = logger.log.bind (logger);
 
   log (`1 init start`);
-  
+  alert (2);
   (async () =>
   {
     log ('Reading permission....');
