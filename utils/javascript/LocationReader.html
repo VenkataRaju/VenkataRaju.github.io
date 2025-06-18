@@ -36,6 +36,7 @@ button:enabled:active
 button:disabled
 {
   color: #BBB;
+  background: repeating-linear-gradient(0deg, #777, #666, #777);
 }
 #locationInfoTA, #outputEl
 {
@@ -185,10 +186,10 @@ function init()
   logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`2 init start`);
+  log (`3 init start`);
   (async () =>
   {
-    log ('2 Reading permission....');
+    log ('Reading permission....');
     let result = await navigator.permissions.query ({ name: 'geolocation' });
     let state = result.state;
     if (state === 'denied')
