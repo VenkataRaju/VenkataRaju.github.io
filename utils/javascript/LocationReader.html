@@ -26,15 +26,15 @@ button
   border-radius: .4rem;
   padding: 0.2rem 0.8rem;
   font-size: 1rem;
-  background: repeating-linear-gradient(0deg, #999, #666, #999);
+  background: repeating-linear-gradient (0deg, #999, #666, #999);
 }
 button:enabled:hover
 {
-  background: repeating-linear-gradient(0deg, #AAA, #555, #AAA);
+  background: repeating-linear-gradient (0deg, #AAA, #555, #AAA);
 }
 button:enabled:active
 {
-  background: repeating-linear-gradient(0deg, #BBB, #444, #BBB);
+  background: repeating-linear-gradient (0deg, #BBB, #444, #BBB);
 }
 button:disabled
 {
@@ -55,7 +55,7 @@ button:disabled
 }
 </style>
 <script>
-let logger, log, logjs; // initialized in init () function
+let logger, log; // initialized in init () function
 
 ael (window, 'error', (el, isInit, event) =>
 {
@@ -78,18 +78,6 @@ function ael (el, eventName, listener, options)
   return listenerWithTry;
 }
 
-function toStrEvent (e)
-{
-  let obj = {};
-  for (let k in e)
-    obj[k] = e[k];
-  return JSON.stringify (obj, (k, v) =>
-  {
-    return (v instanceof Node)   ? 'Node'   :
-           (v instanceof Window) ? 'Window' : v; 
-  }, 1);
-}
-
 function bindTrailingArgs (fun, ...trailingArgs)
 {
   return (...args) => fun.call (null, ...args, ...trailingArgs);
@@ -103,18 +91,18 @@ class Logger
     this.el = el;
   }
 
-  log(...lineparts)
+  log (...lineparts)
   {
     if (this.first)
       this.first = false;
     else
     {
-      this.el.appendChild(
-        document.createElement('br'));
+      this.el.appendChild (
+        document.createElement ('br'));
     }
 
-    let tn = document.createTextNode(
-      lineparts.join(', '));
+    let tn = document.createTextNode (
+      lineparts.join (', '));
     this.el.appendChild (tn);  
   }
 
@@ -127,6 +115,7 @@ class Logger
 
 let geoLoc = navigator.geolocation,
   watchPosId = 0,
+  timerId = 0,
   lastReadTime = 0;
 
 let geoLocOptions =
@@ -143,12 +132,12 @@ function captureCurrentLocation (e, replaceLast)
     log ('Geolocation not availabavailable'le');
     return;
   }
-  let successFun = replaceLast ? bindTrailingArgs (geoLocSucces, true) :geoLocSuccess;
+  let successFun = replaceLast ? bindTrailingArgs (geoLocSucces, true) : geoLocSuccess;
   captureBtn.disabled = true;
   geoLoc.getCurrentPosition (successFun, geoLocFailure, geoLocOptions); 
 }
 
-function geoLocSuccess (pos)
+function geoLocSuccess (pos, replaceLast)
 {
   lastReadTime = pos.timestamp;
   let { latitude, longitude, accuracy /* in meters */, headingFromNorth, speed /* meters */ } = pos.coords;
@@ -163,6 +152,9 @@ function geoLocSuccess (pos)
     currentPosEl.textContent = 'N/A';
     readTimeAgoEl.textContent = 'N/A';
   }
+  
+  if (replaceLast)
+    locationInfoTA‎.append (`Replace`);
 
   locationInfoTA‎.append (`${posText}\n`);
   captureBtn.disabled = false;
