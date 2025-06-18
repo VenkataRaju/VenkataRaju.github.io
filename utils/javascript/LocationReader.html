@@ -182,12 +182,10 @@ function updateTimeAgo ()
   
 function init()
 {
-  alert (1);
   logger = new Logger (output);
   log = logger.log.bind (logger);
 
   log (`1 init start`);
-  alert (2);
   (async () =>
   {
     log ('Reading permission....');
@@ -217,7 +215,7 @@ function init()
 </head>
 <body onload="init()">
 <br><br>
-<label>7 Geolocation permission: </label><span id="locationPermissionEl">N/A</span>
+<label>8 Geolocation permission: </label><span id="locationPermissionEl">N/A</span>
 <br><br>
 <label><input type="checkbox" id="watchPositionCb" /> Watch Position.</label>
 <label>Position: </label><span id="currentPosEl">N/A</span>
