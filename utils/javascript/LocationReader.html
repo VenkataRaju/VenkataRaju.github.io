@@ -39,19 +39,19 @@ function toStrEvent(e)
 
 let log;
 
-ael(window, 'error', e =>
+ael(window, 'error', (el, ev) =>
 {
-  let msg = `Uncaught Global Error: "${e.stack}"`;
-  alert(msg);
-  log && log(msg);
+  let msg = `Uncaught Global Error: "${ev.stack}"`;
+  alert (msg);
+  log && log (msg);
 });
 
-function ael(el, eventName, listener, options)
+function ael (el, eventName, listener, options)
 {
   el.addEventListener(eventName, e =>
   {
-    try { listener(e.target); }
-    catch (e) { log(`Uncaught error from listener on element with id "${el.id}" ${e.stack}`); }
+    try { listener (e.target, e); }
+    catch (e) { log(`Uncaught error from listener on element with id "${el.id}" ${ev.stack}`); }
   }, options);
   return listener;
 }
