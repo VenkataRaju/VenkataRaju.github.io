@@ -130,7 +130,7 @@ function captureCurrentLocation (e, replaceLast)
     log ('Geolocation not availabavailable');
     return;
   }
-  let successFun = replaceLast ? bindTrailingArgs (geoLocSucces, true) : geoLocSuccess;
+  let successFun = replaceLast ? bindTrailingArgs (geoLocSuccess, true) : geoLocSuccess;
   captureBtn.disabled = true;
   geoLoc.getCurrentPosition (successFun, geoLocFailure, geoLocOptions); 
 }
@@ -152,9 +152,9 @@ function geoLocSuccess (pos, replaceLast)
   }
   
   if (replaceLast)
-    locationInfoTA‎.append (`Replace`);
+    locationInfoTA.append (`Replace`);
 
-  locationInfoTA‎.append (`${posText}\n`);
+  locationInfoTA.append (`${posText}\n`);
   captureBtn.disabled = false;
 }
 
@@ -164,7 +164,7 @@ function geoLocFailure (err)
   captureBtn.disabled = false;
 }
 
-fuction updateTimeAgo ()
+function updateTimeAgo ()
 {
   if (!lastReadTime)
     return;
@@ -209,7 +209,7 @@ function init()
 </head>
 <body onload="init()">
 <br><br>
-<label>5 Geolocation permission: </label><span id="locationPermissionEl">N/A</span>
+<label>6 Geolocation permission: </label><span id="locationPermissionEl">N/A</span>
 <br><br>
 <label><input type="checkbox" id="watchPositionCb" /> Watch Position.</label>
 <label>Position: </label><span id="currentPosEl">N/A</span>
