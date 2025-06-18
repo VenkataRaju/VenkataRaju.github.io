@@ -41,7 +41,7 @@ let log;
 
 ael(window, 'error', (el, ev) =>
 {
-  let msg = `0 Uncaught Global Error: "${ev.stack}"`;
+  let msg = `2 Uncaught Global Error: "${ev.stack}"`;
   alert (msg);
   log && log (msg);
 });
@@ -50,8 +50,9 @@ function ael (el, eventName, listener, options)
 {
   el.addEventListener(eventName, e =>
   {
-    try { listener (e.target, e); }
-    catch (e) { log(`Uncaught error from listener on element with id "${el.id}" ${ev.stack}`); }
+    let el = e.target;
+    try { listener (el, e); }
+    catch (e) { log(`Uncaught error from listener on element with id "${el.id}" ${e.stack}`); }
   }, options);
   return listener;
 }
