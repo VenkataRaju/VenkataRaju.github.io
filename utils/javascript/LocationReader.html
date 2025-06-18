@@ -188,8 +188,9 @@ function init()
   log (`2 init start`);
   (async () =>
   {
-    log ('Reading permission....');
+    log ('1 Reading permission....');
     let result = await navigator.permissions.query ({ name: 'geolocation' });
+    log (resut);
     locationPermissionEl.textContent = result.state;
   })();
   
