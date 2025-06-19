@@ -180,7 +180,7 @@ function displayAreaInVariousUnits ()
   let latLngs = locationInfoTA.trim ().split (/\s+|\s*\n\s*/).map (numStr => +numStr);
   if (latLngs.length % 2 !== 0)  
     return log (`Invalid pairs of latitude and longitude. ${latLngs.length} entries.`);
-  for (let i = 0, li = latLngs.length - 1; i++)
+  for (let i = 0, li = latLngs.length - 1; i < li; i++)
   {
     let lat = latLngs[i], lng = latLngs[i + 1];
     if (!isValidLatitude (lat))
@@ -212,11 +212,6 @@ function displayAreaInVariousUnits ()
     return Math.isFinite (num) && (num >= -180 && num <= 180)
   }
 
-  function format (num)
-  {
-     
-  }
-
   // coordinates = [[ lat1, lng1 ], [ lat2, lng2 ], [ lat3, lng3 ], ...];
   function calculatePolygonAreaInSquareMeters (coordinates)
   {
@@ -224,7 +219,7 @@ function displayAreaInVariousUnits ()
       return 0;
   
     let area = 0;
-    for (let i = 0, len = coordinates.length - 1; i < len; i++)
+    for (let i = 0, li = coordinates.length - 1; i < li; i++)
     {
        let [ lat1, lng1 ] = coordinates[i];
        let [ lat2, lng2 ] = coordinates[i + 1];
