@@ -48,6 +48,11 @@ button:disabled
   border-radius: .4rem;
   resize: vertical;
 }
+#areaInUnitsEl
+{
+  display: inline-block;
+  text-align: left;
+}
 #outputEl
 {
   text-align: left;
@@ -140,10 +145,10 @@ function calculatePolygonArea (coordinates)
   {
      let [ lat1, lng1 ] = coordinates[i];
      let [ lat2, lng2 ] = coordinates[i + 1];
-     area += 
-       ( toRadians (lng2 - lng1)
-         * ( 2 + sinOfDegrees (lat1) + sinOfDegrees (lat2) )
-       );
+     area += (
+         toRadians (lng2 - lng1)
+       * ( 2 + sinOfDegrees (lat1) + sinOfDegrees (lat2) )
+             );
   }
   let earthRadiusInMeters = 6378137;
   area = (area * earthRadiusInMeters * earthRadiusInMeters) / 2;
@@ -231,7 +236,7 @@ function init()
   logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`5 init start`);
+  log (`6 init start`);
   (async () =>
   {
     log ('Reading permission....');
@@ -279,6 +284,14 @@ function init()
 <button id="replaceCaptureBtn">Replace last captured Location with the current one</button>
 <br><br>
 <textarea id="locationInfoTA"></textarea>
+<br><br>
+<div id="areaInUnitsEl">
+  <label>Area: </label><br>
+  <label id="areadInAcresLbl">N/A</label> Acres<br>
+  <label id="areadInCentsLbl">N/A</label> Cents<br>
+  <label id="areadInHectresLbl">N/A</label> Hectres<br>
+  <label id="areadInSquareMetersLbl">N/A</label> Square Meters
+</div>
 <br><br>
 <div id="outputEl"></div>
 </body>
