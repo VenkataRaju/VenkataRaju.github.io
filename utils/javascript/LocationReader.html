@@ -257,8 +257,8 @@ function init()
     }
     if (el.checked)
     {
-      watchPosId = geoLoc.watchPosition (geoLocSuccess, geoLocFailure, geoLocOptions);
       timerId = setInterval (updateTimeAgo, 400);
+      watchPosId = geoLoc.watchPosition (geoLocSuccess, geoLocFailure, geoLocOptions);
     }
   });
 
