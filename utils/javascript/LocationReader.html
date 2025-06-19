@@ -38,6 +38,10 @@ button:disabled
   color: #BBB;
   background: repeating-linear-gradient(0deg, #777, #666, #777);
 }
+#buttonsEl > *
+{
+  margin: .2rem;
+}
 #locationInfoTA, #outputEl
 {
   display: inline-block;
@@ -297,7 +301,7 @@ function init()
   logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`29 init start`);
+  log (`30 init start`);
   (async () =>
   {
     log ('Reading permission....');
@@ -351,10 +355,12 @@ function init()
 <label>Position: </label><span id="currentPosEl">N/A</span>
 <label>Updated: </label><span id="readTimeAgoEl">N/A</span>
 <br><br>
+<div id="buttonsEl">
 <button id="useLastReadLocBtn">Use last read</button>
 <button id="useLastReadReplaceLastReadLocBtn">Use last read, replace last read</button><br>
 <button id="readLocBtn">Read</button>
 <button id="readReplaceLastReadLocBtn">Read, replace last read</button>
+</div>
 <br><br>
 <textarea id="locationInfoTA"></textarea>
 <br><br>
