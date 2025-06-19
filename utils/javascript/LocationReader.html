@@ -196,7 +196,7 @@ function geoLocSuccess (pos, replaceLast)
 function displayAreaInVariousUnits ()
 {
   log (`2 displayAreaInVariousUnits`);
-  let latLngs = locationInfoTA.value.trim ().split (/\s+|\s*\n\s*/).map (numStr => +numStr);
+  let latLngs = locationInfoTA.value.trim ().split (/[^\d.]+/).map (numStr => +numStr);
   log (latLngs);
   if (latLngs.length % 2 !== 0)  
     return log (`Invalid pairs of latitude and longitude. ${latLngs.length} entries.`);
@@ -234,6 +234,16 @@ function displayAreaInVariousUnits ()
     return Number.isFinite (num) && (num >= -180 && num <= 180)
   }
 
+  /*
+29.36827,-98.59735
+29.36836,-98.59658
+29.36784,-98.59636
+29.36811,-98.5972 
+
+  2955.22 m²
+  0.73 acres
+  0.30 hectares
+  */
   // coordinates = [[ lat1, lng1 ], [ lat2, lng2 ], [ lat3, lng3 ], ...];
   function calculatePolygonAreaInSquareMeters (coordinates)
   {
@@ -286,7 +296,7 @@ function init()
   logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`18 init start`);
+  log (`19 init start`);
   (async () =>
   {
     log ('Reading permission....');
