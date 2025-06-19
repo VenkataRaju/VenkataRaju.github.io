@@ -195,15 +195,16 @@ function geoLocSuccess (pos, replaceLast)
 
 function displayAreaInVariousUnits ()
 {
-  log (`1 displayAreaInVariousUnits`);
+  log (`2 displayAreaInVariousUnits`);
   let latLngs = locationInfoTA.value.trim ().split (/\s+|\s*\n\s*/).map (numStr => +numStr);
   log (latLngs);
   if (latLngs.length % 2 !== 0)  
     return log (`Invalid pairs of latitude and longitude. ${latLngs.length} entries.`);
-  log (12121212);
+  log (111);
   for (let i = 0, li = latLngs.length - 1; i < li; i += 2)
   {
     let lat = latLngs[i], lng = latLngs[i + 1];
+    log (lat, lng);
     if (!isValidLatitude (lat))
       return log (`Invalid latitude value: "${lat}"`);
     if (!isValidLongitude (lng))
