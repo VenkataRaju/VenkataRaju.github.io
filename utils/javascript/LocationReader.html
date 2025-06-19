@@ -201,6 +201,7 @@ function displayAreaInVariousUnits ()
   if (latLngs.length % 2 !== 0)  
     return log (`Invalid pairs of latitude and longitude. ${latLngs.length} entries.`);
   log (111);
+  let coordinates = []; 
   for (let i = 0, li = latLngs.length - 1; i < li; i += 2)
   {
     let lat = latLngs[i], lng = latLngs[i + 1];
@@ -209,9 +210,10 @@ function displayAreaInVariousUnits ()
       return log (`Invalid latitude value: "${lat}"`);
     if (!isValidLongitude (lng))
       return log (`Invalid latitude value: "${lng}"`);
+    coordinates.push ([ lat, lng ]);
   }
   log (4545454545);
-  let areaInSquareMeters = calculatePolygonAreaInSquareMeters (latLngs);
+  let areaInSquareMeters = calculatePolygonAreaInSquareMeters (coordinates);
   log (`areaInSquareMeters: ${areaInSquareMeters}`);
   /*
    50,000 m2 ÷ 10,000 = 5 Hectares
@@ -299,7 +301,7 @@ function init()
   logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`22 init start`);
+  log (`23 init start`);
   (async () =>
   {
     log ('Reading permission....');
