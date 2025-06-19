@@ -93,7 +93,7 @@ function ael (el, eventName, listener, options)
     try { listener (ev?.target ?? el, isInit, ev); }
     catch (e)
     {
-      log (`Uncaught error from listener on element with id "${el.id}", tagName: "${el.tagName}". ${e.stack}`);
+      log (`Uncaught error from listener on element with id "${el.id}", tagName: "${el.tagName}".\n${e.stack}`);
     }
   };
   el.addEventListener (eventName, listenerWithTry, options);
@@ -213,7 +213,7 @@ function geoLocSuccess (pos, replaceLast)
 
 function geoLocFailure (err)
 {
-  log (`An error occured. Code: "${err.code}", Message: "${err.message}"`);
+  log (`An error occured while reaing Geolocation info. Code: "${err.code}", Message: "${err.message}"`);
   captureBtn.disabled = false;
 }
 
@@ -221,8 +221,8 @@ function updateTimeAgo ()
 {
   if (!lastReadTime)
     return;
-  let seconds =  ~~ ((Date.now () - lastReadTime) / 1000);
-  readTimeAgoEl.textContent = `${seconds} seconds ago`;
+  let seconds =  (Date.now () - lastReadTime) / 1000;
+  readTimeAgoEl.textContent = `${seconds.toFixed (2)} seconds ago`;
 }
   
 function init()
@@ -230,7 +230,7 @@ function init()
   logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`4 init start`);
+  log (`5 init start`);
   (async () =>
   {
     log ('Reading permission....');
@@ -242,7 +242,6 @@ function init()
         el.disabled = true;
       watchPositionCb.parentNode.classList.add ('disabled');
       locationPermissionEl.classList.add ('error');
-      
     }
     locationPermissionEl.textContent = state;
   })();
