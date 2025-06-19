@@ -200,7 +200,6 @@ function geoLocSuccess (pos, replaceLast)
 
 function displayAreaInVariousUnits ()
 {
-  log (`2 displayAreaInVariousUnits`);
   let latLngs = locationInfoTA.value.trim ().split (/[^-\d.]+/).map (numStr => +numStr);
   if (latLngs.length % 2 !== 0)  
     return log (`Invalid pairs of latitude and longitude. ${latLngs.length} entries.`);
@@ -215,7 +214,7 @@ function displayAreaInVariousUnits ()
     coordinates.push ([ lat, lng ]);
   }
   let areaInSquareMeters = calculatePolygonAreaInSquareMeters (coordinates);
-  log (`areaInSquareMeters: ${areaInSquareMeters}`);
+
   /*
    50,000 m2 ÷ 10,000 = 5 Hectares
    40,000 m2 ÷ 4,046.85642 = 9.88421526 Acres
@@ -223,7 +222,7 @@ function displayAreaInVariousUnits ()
   let acres = areaInSquareMeters / 4046.85642;
   areadInAcresLbl.textContent = `${acres.toFixed (4)}`;
   areadInCentsLbl.textContent = `${(acres * 100).toFixed (4)}`;
-  areadInHectresLbl.textContent = `${(areaInSquareMeters * 10000).toFixed (4)}`;
+  areadInHectresLbl.textContent = `${(areaInSquareMeters / 10000).toFixed (4)}`;
   areadInSquareMetersLbl.textContent = `${areaInSquareMeters.toFixed (4)}`
     
   // The latitude must be a number between -90 and 90 and the longitude between -180 and 180.
@@ -236,21 +235,11 @@ function displayAreaInVariousUnits ()
   { // -180 and 180 are the same point
     return Number.isFinite (num) && (num >= -180 && num <= 180)
   }
-
-  /*
-29.36827,-98.59735
-29.36836,-98.59658
-29.36784,-98.59636
-29.36811,-98.5972 
-
-  2955.22 m²
-  0.73 acres
-  0.30 hectares
-  */
+  
+  // Use to test: https://www.daftlogic.com/projects-google-maps-area-calculator-tool.htm
   // coordinates = [[ lat1, lng1 ], [ lat2, lng2 ], [ lat3, lng3 ], ...];
   function calculatePolygonAreaInSquareMeters (coordinates)
   {
-    // log (`calculatePolygonAreaInSquareMeters ${coordinates}`);
     if (coordinates.length < 3)
       return 0;
     coordinates.push (coordinates[0]);
@@ -260,10 +249,10 @@ function displayAreaInVariousUnits ()
     {
        let [ lat1, lng1 ] = coordinates[i];
        let [ lat2, lng2 ] = coordinates[i + 1];
-       area += 
+       area += ( 
            toRadians (lng2 - lng1)
          * ( 2 + sinOfDegrees (lat1) + sinOfDegrees (lat2) )
-               ;
+               );
     }
   
     let earthRadiusInMeters = 6378137;
@@ -301,7 +290,7 @@ function init()
   logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`30 init start`);
+  log (`31 init start`);
   (async () =>
   {
     log ('Reading permission....');
