@@ -172,7 +172,7 @@ function geoLocSuccess (pos, replaceLast)
   }
   locationInfoTA.append (`${posText}\n`);
   captureBtn.disabled = false;
-  displayAreaInVariousUnits ();
+  // displayAreaInVariousUnits ();
 }
 
 function displayAreaInVariousUnits ()
@@ -264,7 +264,7 @@ function init()
   logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`7 init start`);
+  log (`8 init start`);
   (async () =>
   {
     log ('Reading permission....');
@@ -297,6 +297,8 @@ function init()
 
   ael (captureBtn, 'click', captureCurrentLocation);
   ael (replaceCaptureBtn, 'click', bindTrailingArgs (captureCurrentLocation, true));
+
+  ael (locationInfoTA, 'input', displayAreaInVariousUnits);
 }
 </script>
 </head>
