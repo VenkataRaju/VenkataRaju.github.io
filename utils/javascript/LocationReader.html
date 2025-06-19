@@ -75,7 +75,7 @@ let logger, log; // initialized in init () function
 
 ael (window, 'error', (el, isInit, event) =>
 {
-  let msg = `Uncaught Global Error: "${event.stack}"`;
+  let msg = `0 Uncaught Global Error: ${event} "${event.stack}"`;
   alert (msg);
   log && log (msg);
 });
@@ -264,7 +264,7 @@ function init()
   logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`8 init start`);
+  log (`9 init start`);
   (async () =>
   {
     log ('Reading permission....');
