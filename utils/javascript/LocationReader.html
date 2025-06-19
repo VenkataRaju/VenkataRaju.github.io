@@ -66,6 +66,17 @@ button:disabled
 }
 </style>
 <script>
+/* Hectares
+   50,000 m2 ÷ 10,000 = 5 Hectares
+
+   Acres
+   40,000 m2 ÷ 4,046.85642 = 9.88421526 Acres
+   
+   Cents
+   1 Cent = 40.468564224 m2
+   1 m2 = 0.024710538146717 cents
+*/
+  
 let logger, log; // initialized in init () function
 
 ael (window, 'error', (el, isInit, event) =>
@@ -98,19 +109,13 @@ class Logger
 {
   constructor (el)
   {
-    this.first = true;
     this.el = el;
   }
 
   log (...lineparts)
   {
-    if (this.first)
-      this.first = false;
-    else
-    {
-      this.el.appendChild (
-        document.createElement ('br'));
-    }
+    this.el.appendChild (
+      document.createElement ('br'));
 
     let tn = document.createTextNode (
       lineparts.join (', '));
@@ -119,7 +124,6 @@ class Logger
 
   reset()
   {
-    this.first = true;
     this.el.textContent = '';
   }
 }
@@ -131,18 +135,25 @@ function calculatePolygonArea (coordinates)
     return 0;
   
   let area = 0;
-  for (let i = 0, len = coordinates.length; i < len; i++)
+  for (let i = 0, len = coordinates.length - 1; i < len; i++)
   {
      let [ lat1, lng1 ] = coordinates[i];
      let [ lat2, lng2 ] = coordinates[i + 1];
-     area += toRadians (lng2 - lng1)
-       * (2 + Math.sin (toRadians (lat1)) + Math.sin (toRadians (lat2)));
+     area += 
+       ( toRadians (lng2 - lng1)
+         * ( 2 + sinOfDegrees (lat1) + sinOfDegrees (lat2) )
+       );
   }
   let earthRadiusInMeters = 6378137;
   area = (area * earthRadiusInMeters * earthRadiusInMeters) / 2;
   return Math.abs (area);
 }
 
+function sinOfDegrees (degrees)
+{
+  return Math.sin (toRadians (degrees));
+}
+  
 function toRadians (degrees)
 {
   return (degrees * Math.PI) / 180;
