@@ -200,7 +200,7 @@ function displayAreaInVariousUnits ()
   log (latLngs);
   if (latLngs.length % 2 !== 0)  
     return log (`Invalid pairs of latitude and longitude. ${latLngs.length} entries.`);
-  for (let i = 0, li = latLngs.length - 1; i < li; i++)
+  for (let i = 0, li = latLngs.length - 1; i < li; i += 2)
   {
     let lat = latLngs[i], lng = latLngs[i + 1];
     if (!isValidLatitude (lat))
@@ -215,7 +215,6 @@ function displayAreaInVariousUnits ()
    50,000 m2 ÷ 10,000 = 5 Hectares
    40,000 m2 ÷ 4,046.85642 = 9.88421526 Acres
   */
-
   let acres = areaInSquareMeters / 4046.85642;
   areadInAcresLbl.textContent = `${acres.toFixed (4)}`;
   areadInCentsLbl.textContent = `${(acres * 100).toFixed (4)}`;
@@ -285,7 +284,7 @@ function init()
   logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`13 init start`);
+  log (`15 init start`);
   (async () =>
   {
     log ('Reading permission....');
@@ -321,9 +320,9 @@ function init()
   
   ael (useLatestLocBtn, 'click', () =>
   {
-    longitude
+    //longitude
   });
-  ael (replaceLastUsedWithLatestLocBtn, 'click', bindTrailingArgs (captureCurrentLocation, true));
+  // ael (replaceLastUsedWithLatestLocBtn, 'click', bindTrailingArgs (captureCurrentLocation, true));
   ael (readCurLocBtn, 'click', captureCurrentLocation);
   ael (replaceLastUsedWithCurLocBtn, 'click', bindTrailingArgs (captureCurrentLocation, true));
 
