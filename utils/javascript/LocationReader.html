@@ -140,7 +140,7 @@ class Logger
 let geoLoc = navigator.geolocation,
   watchPosId = 0,
   timerId = 0,
-  lastReadTime = 0;
+  lastReadPosDetails = { time: 0 };
 
 let geoLocOptions =
 {
@@ -155,17 +155,20 @@ function captureCurrentLocation (e, replaceLast)
   if (!geoLoc)
     return log ('Geolocation feaure is not available in the browser');
   let successFun = replaceLast ? replaceLastGeoLocSuccess : geoLocSuccess;
-  captureBtn.disabled = true;
+  readCurLocBtn.disabled = true;
   geoLoc.getCurrentPosition (successFun, geoLocFailure, geoLocOptions); 
 }
 
 function geoLocSuccess (pos, replaceLast)
 {
   let currentReadTime = pos.timestamp;
-  if (currentReadTime < lastReadTime)
+  if (currentReadTime < lastReadPosDetails.time)
     return; // just keep using the latest value
-  lastReadTime = currentReadTime;
-  let { latitude, longitude, accuracy /* in meters */, headingFromNorth, speed /* meters */ } = pos.coords;
+  let { latitude, longitude, accuracy /* in meters *//*, headingFromNorth, speed *//* meters */ } = pos.coords;
+  lastReadPosDetails.time = currentReadTime;
+  lastReadPosDetails.latitude = latitude;
+  lastReadPosDetails.longitude = longitude;
+  
   let posText = `${latitude} ${longitude}`;
 
   if (watchPositionCb.checked)
@@ -186,7 +189,7 @@ function geoLocSuccess (pos, replaceLast)
       locationInfoTA.setRangeText ('', li + 1, tl);
   }
   locationInfoTA.append (`${posText}\n`);
-  captureBtn.disabled = false;
+  readCurLocBtn.disabled = false;
   // displayAreaInVariousUnits ();
 }
 
@@ -266,14 +269,14 @@ function displayAreaInVariousUnits ()
 function geoLocFailure (err)
 {
   log (`An error occured while reaing Geolocation info. Code: "${err.code}", Message: "${err.message}"`);
-  captureBtn.disabled = false;
+  readCurLocBtn.disabled = false;
 }
 
 function updateTimeAgo ()
 {
-  if (!lastReadTime)
+  if (!lastReadPosDetails)
     return;
-  let seconds =  (Date.now () - lastReadTime) / 1000;
+  let seconds =  (Date.now () - lastReadPosDetails.time) / 1000;
   readTimeAgoEl.textContent = `${seconds.toFixed (2)} seconds ago`;
 }
   
@@ -290,8 +293,11 @@ function init()
     let state = result.state;
     if (state === 'denied')
     {
-      for (let el of [watchPositionCb, captureBtn, replaceCaptureBtn])
+      for (let el of [watchPositionCb, useLatestLocBtn, 
+        replaceLastUsedWithLatestLocBtn, readCurLocBtn, replaceLastUsedWithCurLocBtn])
+      {
         el.disabled = true;
+      }
       watchPositionCb.parentNode.classList.add ('disabled');
       locationPermissionEl.classList.add ('error');
     }
@@ -312,9 +318,14 @@ function init()
       watchPosId = geoLoc.watchPosition (geoLocSuccess, geoLocFailure, geoLocOptions);
     }
   });
-
-  ael (captureBtn, 'click', captureCurrentLocation);
-  ael (replaceCaptureBtn, 'click', bindTrailingArgs (captureCurrentLocation, true));
+  
+  ael (useLatestLocBtn, 'click', () =>
+  {
+    longitude
+  });
+  ael (replaceLastUsedWithLatestLocBtn, 'click', bindTrailingArgs (captureCurrentLocation, true));
+  ael (readCurLocBtn, 'click', captureCurrentLocation);
+  ael (replaceLastUsedWithCurLocBtn, 'click', bindTrailingArgs (captureCurrentLocation, true));
 
   ael (locationInfoTA, 'input', displayAreaInVariousUnits);
 }
@@ -328,8 +339,10 @@ function init()
 <label>Position: </label><span id="currentPosEl">N/A</span>
 <label>Updated: </label><span id="readTimeAgoEl">N/A</span>
 <br><br>
-<button id="captureBtn">Capture current location</button>
-<button id="replaceCaptureBtn">Replace last captured Location with the current one</button>
+<button id="useLatestLocBtn">Use latest location</button>
+<button id="replaceLastUsedWithLatestLocBtn">Replace last used with latest location</button><br>
+<button id="readCurLocBtn">Read current location</button>
+<button id="replaceLastUsedWithCurLocBtn">Replace last used location with the current location</button>
 <br><br>
 <textarea id="locationInfoTA"></textarea>
 <br><br>
