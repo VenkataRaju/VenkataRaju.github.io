@@ -226,12 +226,12 @@ function displayAreaInVariousUnits ()
   // The latitude must be a number between -90 and 90 and the longitude between -180 and 180.
   function isValidLatitude (num)
   {
-    return Math.isFinite (num) && (num >= -90 && num <= 90)
+    return Number.isFinite (num) && (num >= -90 && num <= 90)
   }
 
   function isValidLongitude (num)
   { // -180 and 180 are the same point
-    return Math.isFinite (num) && (num >= -180 && num <= 180)
+    return Number.isFinite (num) && (num >= -180 && num <= 180)
   }
 
   // coordinates = [[ lat1, lng1 ], [ lat2, lng2 ], [ lat3, lng3 ], ...];
@@ -286,7 +286,7 @@ function init()
   logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`17 init start`);
+  log (`18 init start`);
   (async () =>
   {
     log ('Reading permission....');
