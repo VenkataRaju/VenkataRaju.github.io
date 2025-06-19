@@ -247,6 +247,7 @@ function displayAreaInVariousUnits ()
   // coordinates = [[ lat1, lng1 ], [ lat2, lng2 ], [ lat3, lng3 ], ...];
   function calculatePolygonAreaInSquareMeters (coordinates)
   {
+    log (`calculatePolygonAreaInSquareMeters ${coordinates}`);
     if (coordinates.length < 3)
       return 0;
   
@@ -298,7 +299,7 @@ function init()
   logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`21 init start`);
+  log (`22 init start`);
   (async () =>
   {
     log ('Reading permission....');
