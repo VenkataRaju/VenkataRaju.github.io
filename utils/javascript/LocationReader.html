@@ -56,6 +56,7 @@ button:disabled
 #outputEl
 {
   text-align: left;
+  overflow: scroll;
 }
 .hcenter
 {
@@ -193,6 +194,7 @@ function displayAreaInVariousUnits ()
 {
   log (`displayAreaInVariousUnits`);
   let latLngs = locationInfoTA.trim ().split (/\s+|\s*\n\s*/).map (numStr => +numStr);
+  log (latLngs);
   if (latLngs.length % 2 !== 0)  
     return log (`Invalid pairs of latitude and longitude. ${latLngs.length} entries.`);
   for (let i = 0, li = latLngs.length - 1; i < li; i++)
@@ -279,7 +281,7 @@ function init()
   logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`11 init start`);
+  log (`12 init start`);
   (async () =>
   {
     log ('Reading permission....');
