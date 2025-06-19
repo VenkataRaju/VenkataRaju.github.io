@@ -123,14 +123,15 @@ class Logger
 
   log (...lineparts)
   {
-    if (this.el.hasChildNodes())
-      this.el.appendChild (
+    let ta = this.el;
+    if (ta.hasChildNodes())
+      ta.appendChild (
         document.createElement ('br'));
 
     let tn = document.createTextNode (
       lineparts.join (', '));
-    tn = this.el.appendChild (tn);
-    tn.scrollIntoView();
+    ta.appendChild (tn);
+    ta.scrollTop = ta.scrollHeight;
   }
 
   reset()
@@ -298,7 +299,7 @@ function init()
   logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`27 init start`);
+  log (`28 init start`);
   (async () =>
   {
     log ('Reading permission....');
