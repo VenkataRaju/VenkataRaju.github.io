@@ -129,7 +129,8 @@ class Logger
 
     let tn = document.createTextNode (
       lineparts.join (', '));
-    this.el.appendChild (tn);  
+    this.el.appendChild (tn);
+    tn.scrollIntoView();
   }
 
   reset()
@@ -198,23 +199,18 @@ function displayAreaInVariousUnits ()
 {
   log (`2 displayAreaInVariousUnits`);
   let latLngs = locationInfoTA.value.trim ().split (/[^-\d.]+/).map (numStr => +numStr);
-  log (latLngs);
   if (latLngs.length % 2 !== 0)  
     return log (`Invalid pairs of latitude and longitude. ${latLngs.length} entries.`);
-  log (111);
   let coordinates = []; 
   for (let i = 0, li = latLngs.length - 1; i < li; i += 2)
   {
     let lat = latLngs[i], lng = latLngs[i + 1];
-    log (lat, lng);
     if (!isValidLatitude (lat))
       return log (`Invalid latitude value: "${lat}"`);
     if (!isValidLongitude (lng))
       return log (`Invalid latitude value: "${lng}"`);
     coordinates.push ([ lat, lng ]);
   }
-  
-  log (4545454545);
   let areaInSquareMeters = calculatePolygonAreaInSquareMeters (coordinates);
   log (`areaInSquareMeters: ${areaInSquareMeters}`);
   /*
@@ -251,10 +247,9 @@ function displayAreaInVariousUnits ()
   // coordinates = [[ lat1, lng1 ], [ lat2, lng2 ], [ lat3, lng3 ], ...];
   function calculatePolygonAreaInSquareMeters (coordinates)
   {
-    log (`calculatePolygonAreaInSquareMeters ${coordinates}`);
+    // log (`calculatePolygonAreaInSquareMeters ${coordinates}`);
     if (coordinates.length < 3)
       return 0;
-    
     coordinates.push (coordinates[0]);
     
     let area = 0;
@@ -303,7 +298,7 @@ function init()
   logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`24 init start`);
+  log (`25 init start`);
   (async () =>
   {
     log ('Reading permission....');
