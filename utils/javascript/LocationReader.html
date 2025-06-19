@@ -284,7 +284,7 @@ function init()
   logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`15 init start`);
+  log (`16 init start`);
   (async () =>
   {
     log ('Reading permission....');
@@ -338,10 +338,10 @@ function init()
 <label>Position: </label><span id="currentPosEl">N/A</span>
 <label>Updated: </label><span id="readTimeAgoEl">N/A</span>
 <br><br>
-<button id="useLatestLocBtn">Use latest location</button>
-<button id="replaceLastUsedWithLatestLocBtn">Replace last used with latest location</button><br>
+<button id="useLatestLocBtn">Use last read location</button>
+<button id="replaceLastUsedWithLatestLocBtn">Replace last used with last read location</button><br>
 <button id="readCurLocBtn">Read current location</button>
-<button id="replaceLastUsedWithCurLocBtn">Replace last used location with the current location</button>
+<button id="replaceLastUsedWithCurLocBtn">Replace last used with the current location</button>
 <br><br>
 <textarea id="locationInfoTA"></textarea>
 <br><br>
