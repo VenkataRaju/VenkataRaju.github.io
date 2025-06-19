@@ -171,21 +171,22 @@ let geoLocOptions =
   enableHighAccuracy: true /* needed to measure accurate disance, though it consumes more power  */
 };
 
+let replaceLastGeoLocSuccess = bindTrailingArgs (geoLocSuccess, true);
 function captureCurrentLocation (e, replaceLast)
 {
   if (!geoLoc)
-  {
-    log ('Geolocation not availabavailable');
-    return;
-  }
-  let successFun = replaceLast ? bindTrailingArgs (geoLocSuccess, true) : geoLocSuccess;
+    return log ('Geolocation feaure is not available in the browser');
+  let successFun = replaceLast ? replaceLastGeoLocSuccess : geoLocSuccess;
   captureBtn.disabled = true;
   geoLoc.getCurrentPosition (successFun, geoLocFailure, geoLocOptions); 
 }
 
 function geoLocSuccess (pos, replaceLast)
 {
-  lastReadTime = pos.timestamp;
+  let currentReadTime = pos.timestamp;
+  if (currentReadTime < lastReadTime)
+    return; // just keep using the latest value
+  lastReadTime = currentReadTime;
   let { latitude, longitude, accuracy /* in meters */, headingFromNorth, speed /* meters */ } = pos.coords;
   let posText = `${latitude} ${longitude}`;
 
