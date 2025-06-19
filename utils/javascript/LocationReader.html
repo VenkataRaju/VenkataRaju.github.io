@@ -191,6 +191,7 @@ function geoLocSuccess (pos, replaceLast)
 
 function displayAreaInVariousUnits ()
 {
+  log (`displayAreaInVariousUnits`);
   let latLngs = locationInfoTA.trim ().split (/\s+|\s*\n\s*/).map (numStr => +numStr);
   if (latLngs.length % 2 !== 0)  
     return log (`Invalid pairs of latitude and longitude. ${latLngs.length} entries.`);
@@ -278,7 +279,7 @@ function init()
   logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`10 init start`);
+  log (`11 init start`);
   (async () =>
   {
     log ('Reading permission....');
