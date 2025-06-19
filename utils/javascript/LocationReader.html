@@ -123,8 +123,9 @@ class Logger
 
   log (...lineparts)
   {
-    this.el.appendChild (
-      document.createElement ('br'));
+    if (this.el.hasChildNodes())
+      this.el.appendChild (
+        document.createElement ('br'));
 
     let tn = document.createTextNode (
       lineparts.join (', '));
@@ -212,6 +213,7 @@ function displayAreaInVariousUnits ()
       return log (`Invalid latitude value: "${lng}"`);
     coordinates.push ([ lat, lng ]);
   }
+  
   log (4545454545);
   let areaInSquareMeters = calculatePolygonAreaInSquareMeters (coordinates);
   log (`areaInSquareMeters: ${areaInSquareMeters}`);
@@ -252,18 +254,18 @@ function displayAreaInVariousUnits ()
     log (`calculatePolygonAreaInSquareMeters ${coordinates}`);
     if (coordinates.length < 3)
       return 0;
-  
+    
+    coordinates.push (coordinates[0]);
+    
     let area = 0;
     for (let i = 0, li = coordinates.length - 1; i < li; i++)
     {
        let [ lat1, lng1 ] = coordinates[i];
        let [ lat2, lng2 ] = coordinates[i + 1];
-       log (999999);
-       area += (
+       area += 
            toRadians (lng2 - lng1)
          * ( 2 + sinOfDegrees (lat1) + sinOfDegrees (lat2) )
-               );
-      log (8888, area);
+               ;
     }
   
     let earthRadiusInMeters = 6378137;
@@ -301,7 +303,7 @@ function init()
   logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`23 init start`);
+  log (`24 init start`);
   (async () =>
   {
     log ('Reading permission....');
