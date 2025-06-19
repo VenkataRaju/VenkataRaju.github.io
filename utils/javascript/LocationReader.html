@@ -344,12 +344,16 @@ function init()
 <label>Position: </label><span id="currentPosEl">N/A</span>
 <label>Updated: </label><span id="readTimeAgoEl">N/A</span>
 <br><br>
-<div id="buttonsEl">
-<button id="useLastReadLocBtn">Use last read</button>
-<button id="useLastReadReplaceLastReadLocBtn">Use last read, replace last read</button><br>
-<button id="readLocBtn">Read</button>
-<button id="readReplaceLastReadLocBtn">Read, replace last read</button>
-</div>
+<table id="buttonsEl">
+  <tr>
+    <td><button id="useLastReadLocBtn">1Use last read</button></td>
+    <td><button id="useLastReadReplaceLastReadLocBtn">Use last read, replace last read</button><br></td>
+  </tr>
+  <tr>
+    <td><button id="readLocBtn">Read</button></td>
+    <td><button id="readReplaceLastReadLocBtn">Read, replace last read</button></td>
+  </tr>
+</table>
 <br><br>
 <textarea id="locationInfoTA"></textarea>
 <br><br>
