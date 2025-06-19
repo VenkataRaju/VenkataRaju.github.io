@@ -133,37 +133,6 @@ class Logger
     this.el.textContent = '';
   }
 }
-  
-// coordinates = [[ lat1, lng1 ], [ lat2, lng2 ], [ lat3, lng3 ], ...];
-function calculatePolygonArea (coordinates)
-{
-  if (coordinates.length < 3)
-    return 0;
-  
-  let area = 0;
-  for (let i = 0, len = coordinates.length - 1; i < len; i++)
-  {
-     let [ lat1, lng1 ] = coordinates[i];
-     let [ lat2, lng2 ] = coordinates[i + 1];
-     area += (
-         toRadians (lng2 - lng1)
-       * ( 2 + sinOfDegrees (lat1) + sinOfDegrees (lat2) )
-             );
-  }
-  let earthRadiusInMeters = 6378137;
-  area = (area * earthRadiusInMeters * earthRadiusInMeters) / 2;
-  return Math.abs (area);
-}
-
-function sinOfDegrees (degrees)
-{
-  return Math.sin (toRadians (degrees));
-}
-  
-function toRadians (degrees)
-{
-  return (degrees * Math.PI) / 180;
-}
 
 let geoLoc = navigator.geolocation,
   watchPosId = 0,
@@ -215,8 +184,74 @@ function geoLocSuccess (pos, replaceLast)
   }
   locationInfoTA.append (`${posText}\n`);
   captureBtn.disabled = false;
+  displayAreaInVariousUnits ();
 }
 
+function displayAreaInVariousUnits ()
+{
+  let latLngs = locationInfoTA.trim ().split (/\s+|\s*\n\s*/)
+    .map (numStr => +numStr);
+  if (latLngs.length % 2 !== 0)  
+    return log (`Invalid pairs of latitude and longitude. ${latLngs.length} entries.`);
+  for (let i = 0, li = latLngs.length - 1; i++)
+  {
+    let lat = latLngs[i], lng = latLngs[i + 1];
+    if (!isValidLatitude (lat))
+      return log (`Invalid latitude value: "${lat}"`);
+    if (!isValidLongitude (lng))
+      return log (`Invalid latitude value: "${lng}"`);
+  }
+
+  let areaInSquareMeters = calculatePolygonAreaInSquareMeters (latLngs);
+  areadInAcresLbl.textContent = '';
+  areadInCentsLbl.textContent = '';
+  areadInHectresLbl.textContent = '';
+  areadInSquareMetersLbl.textContent = '';
+  
+  // The latitude must be a number between -90 and 90 and the longitude between -180 and 180.
+  function isValidLatitude (num)
+  {
+    return Math.isFinite (num) && (num >= -90 && num <= 90)
+  }
+
+  function isValidLongitude (num)
+  { // -180 and 180 are the same point
+    return Math.isFinite (num) && (num >= -180 && num <= 180)
+  }
+
+  // coordinates = [[ lat1, lng1 ], [ lat2, lng2 ], [ lat3, lng3 ], ...];
+  function calculatePolygonAreaInSquareMeters (coordinates)
+  {
+    if (coordinates.length < 3)
+      return 0;
+  
+    let area = 0;
+    for (let i = 0, len = coordinates.length - 1; i < len; i++)
+    {
+       let [ lat1, lng1 ] = coordinates[i];
+       let [ lat2, lng2 ] = coordinates[i + 1];
+       area += (
+           toRadians (lng2 - lng1)
+         * ( 2 + sinOfDegrees (lat1) + sinOfDegrees (lat2) )
+               );
+    }
+  
+    let earthRadiusInMeters = 6378137;
+    area = (area * earthRadiusInMeters * earthRadiusInMeters) / 2;
+    return Math.abs (area);
+
+    function sinOfDegrees (degrees)
+    {
+      return Math.sin (toRadians (degrees));
+    }
+  
+    function toRadians (degrees)
+    {
+      return (degrees * Math.PI) / 180;
+    }
+  }
+}
+  
 function geoLocFailure (err)
 {
   log (`An error occured while reaing Geolocation info. Code: "${err.code}", Message: "${err.message}"`);
