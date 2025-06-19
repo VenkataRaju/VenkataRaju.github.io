@@ -200,6 +200,7 @@ function displayAreaInVariousUnits ()
   log (latLngs);
   if (latLngs.length % 2 !== 0)  
     return log (`Invalid pairs of latitude and longitude. ${latLngs.length} entries.`);
+  log (12121212);
   for (let i = 0, li = latLngs.length - 1; i < li; i += 2)
   {
     let lat = latLngs[i], lng = latLngs[i + 1];
@@ -208,7 +209,7 @@ function displayAreaInVariousUnits ()
     if (!isValidLongitude (lng))
       return log (`Invalid latitude value: "${lng}"`);
   }
-
+  log (4545454545);
   let areaInSquareMeters = calculatePolygonAreaInSquareMeters (latLngs);
   log (`areaInSquareMeters: ${areaInSquareMeters}`);
   /*
@@ -284,7 +285,7 @@ function init()
   logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`16 init start`);
+  log (`17 init start`);
   (async () =>
   {
     log ('Reading permission....');
