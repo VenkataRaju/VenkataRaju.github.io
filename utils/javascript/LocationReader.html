@@ -207,6 +207,7 @@ function displayAreaInVariousUnits ()
   }
 
   let areaInSquareMeters = calculatePolygonAreaInSquareMeters (latLngs);
+  log (`areaInSquareMeters: ${areaInSquareMeters}`);
   /*
    50,000 m2 ÷ 10,000 = 5 Hectares
    40,000 m2 ÷ 4,046.85642 = 9.88421526 Acres
@@ -281,7 +282,7 @@ function init()
   logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`12 init start`);
+  log (`13 init start`);
   (async () =>
   {
     log ('Reading permission....');
