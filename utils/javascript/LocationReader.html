@@ -156,7 +156,7 @@ let replaceLastGeoLocSuccess = bindTrailingArgs (geoLocSuccess, true);
 function captureCurrentLocation (el, isInit, event, replaceLast)
 {
   let successFun = replaceLast ? replaceLastGeoLocSuccess : geoLocSuccess;
-  readCurLocBtn.disabled = true;
+  readLocBtn.disabled = true;
   geoLoc.getCurrentPosition (successFun, geoLocFailure, geoLocOptions); 
 }
 
@@ -190,7 +190,7 @@ function geoLocSuccess (pos, replaceLast)
       locationInfoTA.setRangeText ('', li + 1, tl);
   }
   locationInfoTA.append (`${posText}\n`);
-  readCurLocBtn.disabled = false;
+  readLocBtn.disabled = false;
   // displayAreaInVariousUnits ();
 }
 
@@ -281,7 +281,7 @@ function displayAreaInVariousUnits ()
 function geoLocFailure (err)
 {
   log (`An error occured while reaing Geolocation info. Code: "${err.code}", Message: "${err.message}"`);
-  readCurLocBtn.disabled = false;
+  readLocBtn.disabled = false;
 }
 
 function updateTimeAgo ()
@@ -297,7 +297,7 @@ function init()
   logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`28 init start`);
+  log (`29 init start`);
   (async () =>
   {
     log ('Reading permission....');
@@ -305,8 +305,8 @@ function init()
     let state = result.state;
     if (state === 'denied')
     {
-      for (let el of [watchPositionCb, useLatestLocBtn, 
-        replaceLastUsedWithLatestLocBtn, readCurLocBtn, replaceLastUsedWithCurLocBtn])
+      for (let el of [watchPositionCb, useLastReadLocBtn, 
+        useLastReadReplaceLastReadLocBtn, readLocBtn, readReplaceLastReadLocBtn])
       {
         el.disabled = true;
       }
@@ -331,13 +331,13 @@ function init()
     }
   });
   
-  ael (useLatestLocBtn, 'click', () =>
+  ael (useLastReadLocBtn, 'click', () =>
   {
     //longitude
   });
-  // ael (replaceLastUsedWithLatestLocBtn, 'click', bindTrailingArgs (captureCurrentLocation, true));
-  ael (readCurLocBtn, 'click', captureCurrentLocation);
-  ael (replaceLastUsedWithCurLocBtn, 'click', bindTrailingArgs (captureCurrentLocation, true));
+  // ael (useLastReadReplaceLastReadLocBtn, 'click', bindTrailingArgs (captureCurrentLocation, true));
+  ael (readLocBtn, 'click', captureCurrentLocation);
+  ael (readReplaceLastReadLocBtn, 'click', bindTrailingArgs (captureCurrentLocation, true));
 
   ael (locationInfoTA, 'input', displayAreaInVariousUnits);
 }
@@ -351,10 +351,10 @@ function init()
 <label>Position: </label><span id="currentPosEl">N/A</span>
 <label>Updated: </label><span id="readTimeAgoEl">N/A</span>
 <br><br>
-<button id="useLatestLocBtn">Use last read location</button>
-<button id="replaceLastUsedWithLatestLocBtn">Replace last used with last read location</button><br>
-<button id="readCurLocBtn">Read current location</button>
-<button id="replaceLastUsedWithCurLocBtn">Replace last used with the current location</button>
+<button id="useLastReadLocBtn">Use last read</button>
+<button id="useLastReadReplaceLastReadLocBtn">Use last read, replace last read</button><br>
+<button id="readLocBtn">Read</button>
+<button id="readReplaceLastReadLocBtn">Read, replace last read</button>
 <br><br>
 <textarea id="locationInfoTA"></textarea>
 <br><br>
