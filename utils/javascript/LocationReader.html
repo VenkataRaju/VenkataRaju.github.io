@@ -77,12 +77,12 @@ let logger, log; // initialized in init () function
 function toStr (event)
 {
   let obj = {};
-  for (let k in e) {
-    obj[k] = e[k];
-  }
-  return JSON.stringify(obj, (k, v) =>
+  for (let k in event)
+    obj[k] = event[k];
+
+  return JSON.stringify (obj, (k, v) =>
   {
-    if (v instanceof Node) return 'Node';
+    if (v instanceof Node)   return 'Node';
     if (v instanceof Window) return 'Window';
     return v;
   }, ' ');
@@ -298,7 +298,7 @@ function init()
   logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`25 init start`);
+  log (`26 init start`);
   (async () =>
   {
     log ('Reading permission....');
