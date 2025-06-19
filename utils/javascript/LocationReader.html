@@ -73,9 +73,23 @@ button:disabled
 <script>
 let logger, log; // initialized in init () function
 
+function toStr (event)
+{
+  let obj = {};
+  for (let k in e) {
+    obj[k] = e[k];
+  }
+  return JSON.stringify(obj, (k, v) =>
+  {
+    if (v instanceof Node) return 'Node';
+    if (v instanceof Window) return 'Window';
+    return v;
+  }, ' ');
+}
+  
 ael (window, 'error', (el, isInit, event) =>
 {
-  let msg = `0 Uncaught Global Error: ${event} "${event.stack}"`;
+  let msg = `0 Uncaught Global Error: ${toStr (event)} "${event.stack}"`;
   alert (msg);
   log && log (msg);
 });
@@ -264,7 +278,7 @@ function init()
   logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`9 init start`);
+  log (`10 init start`);
   (async () =>
   {
     log ('Reading permission....');
