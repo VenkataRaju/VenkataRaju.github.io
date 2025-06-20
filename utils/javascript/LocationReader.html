@@ -184,7 +184,7 @@ let geoLoc = navigator.geolocation,
 let geoLocOptions =
 {
   maximumAge: 0 /* no cache */,
-  timeout: 1200 /* millis */,
+  timeout: 4000 /* millis */,
   enableHighAccuracy: true /* needed to measure accurate disance, though it consumes more power  */
 };
 
@@ -207,10 +207,10 @@ function geoLocSuccess (pos, replaceLast)
   lastReadPosDetails.longitude = longitude;
   
   let posText = `${latitude} ${longitude}`;
-  currentPosEl.textContent = `${posText} ${accuracy} meters`;
-
-  if (!watchPositionCb.checked)
-    readTimeEl.textContent = readableTime (timestamp);
+  latPostEl.textContent = latitude;
+  lngPostEl.textContent = longitude;
+  accuracyEl.textContent = accuracy;
+  readTimeEl.textContent = readableTime (timestamp);
   
   if (replaceLast)
   {
@@ -305,9 +305,10 @@ function geoLocFailure (err)
 
 function updateTimeAgo ()
 {
-  if (!lastReadPosDetails)
+  if (!lastReadPosDetails.timestamp)
     return;
-  let seconds =  (Date.now () - lastReadPosDetails.time) / 1000;
+  let seconds =  (Date.now () - lastReadPosDetails.timestamp) / 1000;
+  let seconds =  (Date.now () - lastReadPosDetails.timestamp) / 1000;
   readTimeAgoEl.textContent = `${seconds.toFixed (2)} seconds ago`;
 }
   
@@ -366,14 +367,16 @@ function init()
 <br>
 <label>Geolocation permission: </label><span id="locationPermissionEl">N/A</span>
 <br><br>
-<label><input type="checkbox" id="watchPositionCb" /> Watch Position.</label>
-<label>Position: </label><span id="currentPosEl">N/A</span>
-<label>Updated: </label>
-<span id="readTimeEl">N/A</span>
-<span id="readTimeAgoEl">N/A</span><br><br>
+<div>
+<label><input type="checkbox" id="watchPositionCb" /> Watch Position.</label><br>
+<label> Latitude: </label><label id="latPosEl">N/A</label><br>
+<label>Longitude: </label><label id="lngPosEl">N/A</label><br>
+<label>Accuracy:  </label><label id="accuracyEl">N/A</label> meters<br>
+<label>Updated:   </label><label id="readTimeEl">N/A</label>. <label id="readTimeAgoEl">N/A</label>
+</div>
 <table id="buttonsEl">
   <tr>
-    <td><button id="useLastReadLocBtn">1Use last read</button></td>
+    <td><button id="useLastReadLocBtn">Use last read</button></td>
     <td><button id="useLastReadReplaceLastReadLocBtn">Use last read, replace last read</button><br></td>
   </tr>
   <tr>
