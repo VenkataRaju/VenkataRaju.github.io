@@ -67,8 +67,9 @@ button:disabled
 }
 #outputEl
 {
-  text-align: left;
   overflow: scroll;
+  text-align: left;
+  font-family: monospace;
 }
 .hcenter
 {
@@ -102,13 +103,14 @@ function convertEventToStr (event)
   
 ael (window, 'error', (el, isInit, event) =>
 {
-  let msg = `0 Uncaught Global Error: ${convertEventToStr (event)} "${event.stack}"`;
+  let msg = `Uncaught Global Error: ${convertEventToStr (event)} "${event.stack}"`;
   alert (msg);
   log && log (msg);
 });
 
 function ael (el, eventName, listener, options)
 {
+  // el, isInit will be provided, when manually called by the user, ev(ent) will be absent at that time.
   let listenerWithTry = (ev, el, isInit) =>
   {
     try { listener (ev?.target ?? el, isInit, ev); }
