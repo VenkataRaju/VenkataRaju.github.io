@@ -100,6 +100,24 @@ function convertEventToStr (event)
     return v;
   }, ' ');
 }
+
+function padNum (num, numOfDigits = 2, padStr = '0')
+{
+  return `${num}`.padStart (numOfDigits, padStr);
+}
+
+function readableTime (timestamp = Date.now ())
+{
+  let date = new Date (timestamp);
+  let hrs = date.getHours ();
+  if (hrs > 12)
+    hrs -= 12;
+  let mins = date.getMinutes ();
+  let secs = date.getSeconds ();
+  let millis = date.getMilliseconds();
+  return `${padNum (hrs)}:${padNum (mins)}:${padNum (secs)}.${padNum (millis, 3)}`;
+}
+
   
 ael (window, 'error', (el, isInit, event) =>
 {
@@ -188,10 +206,7 @@ function geoLocSuccess (pos, replaceLast)
   currentPosEl.textContent = `${posText} ${accuracy} meters`;
 
   if (!watchPositionCb.checked)
-  {
-    let d = new Date (timestamp);
-    readTimeAgoEl.textContent = 
-  }
+    readTimeEl.textContent = readableTime (timestamp);
   
   if (replaceLast)
   {
