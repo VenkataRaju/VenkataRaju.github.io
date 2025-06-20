@@ -119,7 +119,7 @@ function readableTime (timestamp = Date.now ())
     hrs -= 12;
   let mins = date.getMinutes ();
   let secs = date.getSeconds ();
-  let millis = date.getMilliseconds();
+  let millis = date.getMilliseconds ();
   return `${padNum (hrs)}:${padNum (mins)}:${padNum (secs)}.${padNum (millis, 3)}`;
 }
   
@@ -211,7 +211,8 @@ function geoLocSuccess (pos, replaceLast)
   accuracyEl.textContent = accuracy;
   readTimeEl.textContent = readableTime (timestamp);
 
-  // TODO: enable last rad butons
+  useLastReadLocBtn.disabled = false;
+  useLastReadReplaceLastReadLocBtn.disabled = false;
 
   updateValuesInTheTextArea (latitude, longitude, replaceLast);
 }
@@ -236,6 +237,7 @@ function displayAreaInVariousUnits ()
   let latLngs = locationInfoTA.value.trim ().split (/[^-\d.]+/).map (numStr => +numStr);
   if (latLngs.length % 2 !== 0)  
     return log (`Invalid pairs of latitude and longitude. ${latLngs.length} entries.`);
+
   let coordinates = []; 
   for (let i = 0, li = latLngs.length - 1; i < li; i += 2)
   {
@@ -246,6 +248,7 @@ function displayAreaInVariousUnits ()
       return log (`Invalid longitude value: "${lng}"`);
     coordinates.push ([lat, lng]);
   }
+  
   let areaInSquareMeters = calculatePolygonAreaInSquareMeters (coordinates);
 
   /*
@@ -323,7 +326,7 @@ function init()
   let logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`32 init start`);
+  log (`33 init start`);
   (async () =>
   {
     log ('Reading permission....');
