@@ -84,7 +84,7 @@ button:disabled
 }
 </style>
 <script>
-let logger, log; // initialized in init () function
+let log; // initialized in init () function
 
 function convertEventToStr (event)
 {
@@ -295,10 +295,10 @@ function updateTimeAgo ()
   
 function init()
 {
-  logger = new Logger (outputEl);
+  let logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`31 init start`);
+  log (`32 init start`);
   (async () =>
   {
     log ('Reading permission....');
