@@ -211,7 +211,9 @@ function geoLocSuccess (pos, replaceLast)
   accuracyEl.textContent = accuracy;
   readTimeEl.textContent = readableTime (timestamp);
 
-  updateValuesInTheTextArea (latitude, longitude);
+  // TODO: enable last rad butons
+
+  updateValuesInTheTextArea (latitude, longitude, replaceLast);
 }
 
 function updateValuesInTheTextArea (latitude, longitude, replaceLast)
@@ -357,9 +359,12 @@ function init()
   
   ael (useLastReadLocBtn, 'click', () =>
   {
-    //longitude
+    updateValuesInTheTextArea (lastReadPosDetails.latitude, lastReadPosDetails.longitude);
   });
-  // ael (useLastReadReplaceLastReadLocBtn, 'click', bindTrailingArgs (captureCurrentLocation, true));
+  ael (useLastReadReplaceLastReadLocBtn, 'click', () =>
+  {
+    updateValuesInTheTextArea (lastReadPosDetails.latitude, lastReadPosDetails.longitude, true);
+  });
   ael (readLocBtn, 'click', captureCurrentLocation);
   ael (readReplaceLastReadLocBtn, 'click', bindTrailingArgs (captureCurrentLocation, true));
 
