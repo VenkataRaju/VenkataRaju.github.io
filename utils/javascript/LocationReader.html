@@ -17,6 +17,7 @@ body
 {
   padding: 0.2rem;
   text-align: center;
+  font-family: monospace;
 }
 button
 {
@@ -69,7 +70,6 @@ button:disabled
 {
   overflow: scroll;
   text-align: left;
-  font-family: monospace;
 }
 .hcenter
 {
@@ -176,25 +176,18 @@ function captureCurrentLocation (el, isInit, event, replaceLast)
 
 function geoLocSuccess (pos, replaceLast)
 {
-  let currentReadTime = pos.timestamp;
-  if (currentReadTime < lastReadPosDetails.time)
+  let timestamp = pos.timestamp;
+  if (timestamp < (lastReadPosDetails?.timestamp ?? 0))
     return; // just keep using the latest value
-  let { latitude, longitude, accuracy /* in meters *//*, headingFromNorth, speed *//* meters */ } = pos.coords;
-  lastReadPosDetails.time = currentReadTime;
+  let { latitude, longitude, accuracy /* in meters *//*, headingFromNorth, speed *//* in meters */ } = pos.coords;
+  lastReadPosDetails.timestamp = timestamp;
   lastReadPosDetails.latitude = latitude;
   lastReadPosDetails.longitude = longitude;
   
   let posText = `${latitude} ${longitude}`;
 
-  if (watchPositionCb.checked)
-  {
-    currentPosEl.textContent = `${posText} ${accuracy} meters`;
-  }
-  else
-  {
-    currentPosEl.textContent = 'N/A';
-    readTimeAgoEl.textContent = 'N/A';
-  }
+  currentPosEl.textContent = `${posText} ${accuracy} meters`;
+  readTimeAgoEl.textContent = 'N/A';
   
   if (replaceLast)
   {
