@@ -206,20 +206,25 @@ function geoLocSuccess (pos, replaceLast)
   lastReadPosDetails.latitude = latitude;
   lastReadPosDetails.longitude = longitude;
   
-  let posText = `${latitude} ${longitude}`;
   latPostEl.textContent = latitude;
   lngPostEl.textContent = longitude;
   accuracyEl.textContent = accuracy;
   readTimeEl.textContent = readableTime (timestamp);
-  
+
+  updateValuesInTheTextArea (latitude, longitude);
+}
+
+function updateValuesInTheTextArea (latitude, longitude, replaceLast)
+{
   if (replaceLast)
   {
     let text = locationInfoTA.value, tl = text.length;
-    let li = text.lastIndexOf ('\n', text.length - 2);
+    let li = text.lastIndexOf ('\n', tl - 2);
     if (li !== -1)
       locationInfoTA.setRangeText ('', li + 1, tl);
   }
-  locationInfoTA.append (`${posText}\n`);
+  
+  locationInfoTA.append (`${latitude} ${longitude}\n`);
   readLocBtn.disabled = false;
   // displayAreaInVariousUnits ();
 }
@@ -307,7 +312,6 @@ function updateTimeAgo ()
 {
   if (!lastReadPosDetails.timestamp)
     return;
-  let seconds =  (Date.now () - lastReadPosDetails.timestamp) / 1000;
   let seconds =  (Date.now () - lastReadPosDetails.timestamp) / 1000;
   readTimeAgoEl.textContent = `${seconds.toFixed (2)} seconds ago`;
 }
