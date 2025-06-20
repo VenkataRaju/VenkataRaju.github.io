@@ -185,9 +185,13 @@ function geoLocSuccess (pos, replaceLast)
   lastReadPosDetails.longitude = longitude;
   
   let posText = `${latitude} ${longitude}`;
-
   currentPosEl.textContent = `${posText} ${accuracy} meters`;
-  readTimeAgoEl.textContent = 'N/A';
+
+  if (!watchPositionCb.checked)
+  {
+    let d = new Date (timestamp);
+    readTimeAgoEl.textContent = 
+  }
   
   if (replaceLast)
   {
@@ -345,8 +349,9 @@ function init()
 <br><br>
 <label><input type="checkbox" id="watchPositionCb" /> Watch Position.</label>
 <label>Position: </label><span id="currentPosEl">N/A</span>
-<label>Updated: </label><span id="readTimeAgoEl">N/A</span>
-<br><br>
+<label>Updated: </label>
+<span id="readTimeEl">N/A</span>
+<span id="readTimeAgoEl">N/A</span><br><br>
 <table id="buttonsEl">
   <tr>
     <td><button id="useLastReadLocBtn">1Use last read</button></td>
