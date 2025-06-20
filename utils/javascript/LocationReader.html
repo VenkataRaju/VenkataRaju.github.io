@@ -18,7 +18,12 @@ body
   padding: 0.2rem;
   text-align: center;
   font-family: monospace;
-  font-size: 1rem;
+  font-size: .8rem;
+}
+input, textarea, button
+{
+  font-family: inherit;
+  font-size: inherit;
 }
 button
 {
@@ -231,8 +236,8 @@ function displayAreaInVariousUnits ()
     if (!isValidLatitude (lat))
       return log (`Invalid latitude value: "${lat}"`);
     if (!isValidLongitude (lng))
-      return log (`Invalid latitude value: "${lng}"`);
-    coordinates.push ([ lat, lng ]);
+      return log (`Invalid longitude value: "${lng}"`);
+    coordinates.push ([lat, lng]);
   }
   let areaInSquareMeters = calculatePolygonAreaInSquareMeters (coordinates);
 
