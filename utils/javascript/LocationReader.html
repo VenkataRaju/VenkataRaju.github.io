@@ -66,7 +66,7 @@ button:disabled
   border-radius: .4rem;
   resize: vertical;
 }
-#areaInUnitsEl
+.children-left-align-inline-box
 {
   display: inline-block;
   text-align: left;
@@ -326,7 +326,7 @@ function init()
   let logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`33 init start`);
+  log (`34 init start`);
   (async () =>
   {
     log ('Reading permission....');
@@ -379,7 +379,7 @@ function init()
 <br>
 <label>Geolocation permission: </label><span id="locationPermissionEl">N/A</span>
 <br><br>
-<div>
+<div class="children-left-align-inline-box">
 <label><input type="checkbox" id="watchPositionCb" /> Watch Position.</label><br>
 <label> Latitude: </label><label id="latPosEl">N/A</label><br>
 <label>Longitude: </label><label id="lngPosEl">N/A</label><br>
@@ -399,7 +399,7 @@ function init()
 <br><br>
 <textarea id="locationInfoTA"></textarea>
 <br><br>
-<div id="areaInUnitsEl">
+<div id="areaInUnitsEl" class="children-left-align-inline-box">
   <label>Area in various units: </label><br>
   <label id="areadInAcresLbl">N/A</label> Acres<br>
   <label id="areadInCentsLbl">N/A</label> Cents<br>
