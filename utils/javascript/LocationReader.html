@@ -234,7 +234,15 @@ function updateValuesInTheTextArea (latitude, longitude, replaceLast)
 
 function displayAreaInVariousUnits ()
 {
-  let latLngs = locationInfoTA.value.trim ().split (/[^-\d.]+/).map (numStr => +numStr);
+  let latLngs = [];
+  for (let numStr of locationInfoTA.value.trim ().split (/[^-\d.]+/))
+  {
+    let num = +numStr;
+    if (isNaN (num)
+      return log (`Invalid latitude / longitude number: "${numStr}"`);
+    latLngs.push (num);
+  }
+   
   if (latLngs.length % 2 !== 0)  
     return log (`Invalid pairs of latitude and longitude. ${latLngs.length} entries.`);
 
@@ -261,7 +269,7 @@ function displayAreaInVariousUnits ()
   areadInHectresLbl.textContent = `${formt (areaInSquareMeters / 10000)}`;
   areadInSquareMetersLbl.textContent = `${format (areaInSquareMeters)}`
 
-  function format (num) { return acres.toFixed (8).padStart (13, ' '); }
+  function format (num) { return num.toFixed (8).padStart (13, ' '); }
   
   // The latitude must be a number between -90 and 90 and the longitude between -180 and 180.
   function isValidLatitude (num)
@@ -328,7 +336,7 @@ function init()
   let logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`36 init start`);
+  log (`37 init start`);
   (async () =>
   {
     log ('Reading permission....');
