@@ -282,7 +282,7 @@ function displayAreaInVariousUnits ()
   areadInHectresLbl.textContent = `${format (areaInSquareMeters / 10000)}`;
   areadInSquareMetersLbl.textContent = `${format (areaInSquareMeters)}`
 
-  function format (num) { return num.toFixed (8).padStart (13, ' '); }
+  function format (num) { return num.toFixed (8).padStart (15, ' '); }
   
   // The latitude must be a number between -90 and 90 and the longitude between -180 and 180.
   function isValidLatitude (num)
