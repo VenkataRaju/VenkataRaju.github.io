@@ -256,11 +256,13 @@ function displayAreaInVariousUnits ()
    40,000 m2 ÷ 4,046.85642 = 9.88421526 Acres
   */
   let acres = areaInSquareMeters / 4046.85642;
-  areadInAcresLbl.textContent = `${acres.toFixed (4)}`;
-  areadInCentsLbl.textContent = `${(acres * 100).toFixed (4)}`;
-  areadInHectresLbl.textContent = `${(areaInSquareMeters / 10000).toFixed (4)}`;
-  areadInSquareMetersLbl.textContent = `${areaInSquareMeters.toFixed (4)}`
-    
+  areadInAcresLbl.textContent = `${format (acres)}`;
+  areadInCentsLbl.textContent = `${format (acres * 100)}`;
+  areadInHectresLbl.textContent = `${formt (areaInSquareMeters / 10000)}`;
+  areadInSquareMetersLbl.textContent = `${format (areaInSquareMeters)}`
+
+  function format (num) { return acres.toFixed (8).padStart (13, ' '); }
+  
   // The latitude must be a number between -90 and 90 and the longitude between -180 and 180.
   function isValidLatitude (num)
   {
@@ -326,7 +328,7 @@ function init()
   let logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`34 init start`);
+  log (`35 init start`);
   (async () =>
   {
     log ('Reading permission....');
