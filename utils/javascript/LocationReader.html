@@ -63,7 +63,8 @@ button:disabled
 }
 #areaInUnitsEl > label[id]:nth-child(even)
 {
-  color: #444;
+  display: block;
+  color: #666;
 }
 #locationInfoTA, #outputEl
 {
@@ -446,11 +447,11 @@ function init()
 <label id="locationInfoTAErrLbl" class="error"></label>
 <br><br>
 <div id="areaInUnitsEl" class="children-left-align-inline-box">
-  <label>Area in various units: </label><br>
-  <label id="areadInAcresLbl">N/A</label> Acres<br>
-  <label id="areadInCentsLbl">N/A</label> Cents<br>
-  <label id="areadInHectresLbl">N/A</label> Hectres<br>
-  <label id="areadInSquareMetersLbl">N/A</label> Square Meters
+  <label>Area in various units: </label>
+  <label><span id="areadInAcresLbl">N/A</span> Acres</label>
+  <label><span id="areadInCentsLbl">N/A</span> Cents</label>
+  <label><span id="areadInHectresLbl">N/A</span> Hectres</label>
+  <label><span id="areadInSquareMetersLbl">N/A</span> Square Meters</label>
 </div>
 <br><br>
 <div id="outputEl"></div>
