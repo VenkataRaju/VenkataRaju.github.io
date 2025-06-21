@@ -56,6 +56,10 @@ button:disabled
 { 
   width: 100%;
 }
+#areaInUnitsEl
+{
+  white-space: pre;
+}
 #locationInfoTA, #outputEl
 {
   display: inline-block;
@@ -340,7 +344,7 @@ function init()
   let logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`39 init start`);
+  log (`40init start`);
   (async () =>
   {
     log ('Reading permission....');
