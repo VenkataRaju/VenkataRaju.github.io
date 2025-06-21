@@ -256,7 +256,7 @@ function displayAreaInVariousUnits ()
   err ('');
   
   let latLngs = [];
-  for (let numStr of locationInfoTA.matchAll (/-?(?:(?:\d+(?:\.\d+)?)|\.\d+)/g))
+  for (let numStr of locationInfoTA.value.matchAll (/-?(?:(?:\d+(?:\.\d+)?)|\.\d+)/g))
   {
     let num = +numStr;
     if (isNaN (num))
