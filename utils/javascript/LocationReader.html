@@ -59,6 +59,7 @@ button:disabled
 #areaInUnitsEl > *
 {
   white-space: pre;
+  margin-top: .1rem;
 }
 #locationInfoTA, #outputEl
 {
@@ -344,7 +345,7 @@ function init()
   let logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`41 init start`);
+  log (`42 init start`);
   (async () =>
   {
     log ('Reading permission....');
@@ -390,6 +391,7 @@ function init()
   ael (readReplaceLastReadLocBtn, 'click', bindTrailingArgs (captureCurrentLocation, true));
 
   ael (locationInfoTA, 'input', displayAreaInVariousUnits);
+  log (`init complete.`);
 }
 </script>
 </head>
