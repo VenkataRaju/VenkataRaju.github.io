@@ -139,6 +139,10 @@ function ael (el, eventName, listener, options)
     catch (e)
     {
       log (`Uncaught error from listener on element with id "${el?.id}", tagName: "${el?.tagName}".\n${e.stack}`);
+     /* Investigate
+     Uncaught error from listener on element with id "undefined", tagName: "undefined".
+     ReferenceError: formt is not defined at displayAreaInVariousUnits
+     (https://venkataraju.github.io/utils/javascript/LocationReader.html:269:35) at HTMLTextAreaElement.listenerWithTry (https://venkataraju.github.io/utils/javascript/LocationReader.html:138:11)*/
     }
   };
   el.addEventListener (eventName, listenerWithTry, options);
@@ -266,7 +270,7 @@ function displayAreaInVariousUnits ()
   let acres = areaInSquareMeters / 4046.85642;
   areadInAcresLbl.textContent = `${format (acres)}`;
   areadInCentsLbl.textContent = `${format (acres * 100)}`;
-  areadInHectresLbl.textContent = `${formt (areaInSquareMeters / 10000)}`;
+  areadInHectresLbl.textContent = `${format (areaInSquareMeters / 10000)}`;
   areadInSquareMetersLbl.textContent = `${format (areaInSquareMeters)}`
 
   function format (num) { return num.toFixed (8).padStart (13, ' '); }
