@@ -138,7 +138,7 @@ function ael (el, eventName, listener, options)
     try { listener (ev?.target ?? el, isInit, ev); }
     catch (e)
     {
-      log (`Uncaught error from listener on element with id "${el.id}", tagName: "${el.tagName}".\n${e.stack}`);
+      log (`Uncaught error from listener on element with id "${el?.id}", tagName: "${el?.tagName}".\n${e.stack}`);
     }
   };
   el.addEventListener (eventName, listenerWithTry, options);
@@ -336,7 +336,7 @@ function init()
   let logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`38 init start`);
+  log (`39 init start`);
   (async () =>
   {
     log ('Reading permission....');
