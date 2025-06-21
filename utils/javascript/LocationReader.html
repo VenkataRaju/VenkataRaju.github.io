@@ -127,7 +127,17 @@ function readableTime (timestamp = Date.now ())
   let millis = date.getMilliseconds ();
   return `${padNum (hrs)}:${padNum (mins)}:${padNum (secs)}.${padNum (millis, 3)}`;
 }
-  
+
+function debounce (fun, delay)
+{
+  let id;
+  return () =>
+  {
+    clearTimeout (id);
+    id = setTimeout (fun, delay);
+  };
+}
+
 ael (window, 'error', (el, isInit, event) =>
 {
   let msg = `Uncaught Global Error: ${convertEventToStr (event)} "${event.stack}"`;
@@ -243,31 +253,38 @@ function updateValuesInTheTextArea (latitude, longitude, replaceLast)
 
 function displayAreaInVariousUnits ()
 {
+  err ('');
+  
   let latLngs = [];
-  for (let numStr of locationInfoTA.value.trim ().split (/[^-\d.]+/).filter (str => str))
+  for (let numStr of locationInfoTA.matchAll (/-?(?:(?:\d+(?:\.\d+)?)|\.\d+)/g))
   {
     let num = +numStr;
     if (isNaN (num))
-      return log (`Invalid latitude / longitude number: "${numStr}"`);
+      return err (`Invalid latitude / longitude number: "${numStr}"`);
     latLngs.push (num);
   }
 
   if (!latLngs.length)
-    return log (`No valid pairs of latitude and longitude values`);
+    return err (`No valid pairs of latitude and longitude values`);
   if (latLngs.length < 3)
-    return log (`Needs atleast 2 (currently ${latLngs.length}) valid pairs of latitude and longitude values`);
+    return err (`Needs atleast 2 (currently ${latLngs.length}) valid pairs of latitude and longitude values`);
   if (latLngs.length % 2 !== 0)  
-    return log (`Invalid pairs of latitude and longitude. ${latLngs.length} entries.`);
+    return err (`Invalid pairs of latitude and longitude. ${latLngs.length} entries.`);
 
   let coordinates = []; 
   for (let i = 0, li = latLngs.length - 1; i < li; i += 2)
   {
     let lat = latLngs[i], lng = latLngs[i + 1];
     if (!isValidLatitude (lat))
-      return log (`Invalid latitude value: "${lat}"`);
+      return err (`Invalid latitude value: "${lat}"`);
     if (!isValidLongitude (lng))
-      return log (`Invalid longitude value: "${lng}"`);
+      return err (`Invalid longitude value: "${lng}"`);
     coordinates.push ([lat, lng]);
+  }
+
+  function err (message)
+  {
+    locationInfoTAErrLbl.textContent = message;
   }
   
   let areaInSquareMeters = calculatePolygonAreaInSquareMeters (coordinates);
@@ -394,7 +411,7 @@ function init()
   ael (readLocBtn, 'click', captureCurrentLocation);
   ael (readReplaceLastUsedLocBtn, 'click', bindTrailingArgs (captureCurrentLocation, true));
 
-  ael (locationInfoTA, 'input', displayAreaInVariousUnits);
+  ael (locationInfoTA, 'input', debounce (displayAreaInVariousUnits, 800));
   log (`init complete.`);
 }
 </script>
@@ -421,7 +438,8 @@ function init()
   </tr>
 </table>
 <br><br>
-<textarea id="locationInfoTA"></textarea>
+<textarea id="locationInfoTA"></textarea><br>
+<label id="locationInfoTAErrLbl"></label>
 <br><br>
 <div id="areaInUnitsEl" class="children-left-align-inline-box">
   <label>Area in various units: </label><br>
