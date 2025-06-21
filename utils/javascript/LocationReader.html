@@ -238,7 +238,7 @@ function displayAreaInVariousUnits ()
   for (let numStr of locationInfoTA.value.trim ().split (/[^-\d.]+/))
   {
     let num = +numStr;
-    if (isNaN (num)
+    if (isNaN (num))
       return log (`Invalid latitude / longitude number: "${numStr}"`);
     latLngs.push (num);
   }
@@ -336,7 +336,7 @@ function init()
   let logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`37 init start`);
+  log (`38 init start`);
   (async () =>
   {
     log ('Reading permission....');
