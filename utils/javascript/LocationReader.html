@@ -221,7 +221,7 @@ function geoLocSuccess (pos, replaceLast)
   readTimeEl.textContent = readableTime (timestamp);
 
   useLastReadLocBtn.disabled = false;
-  useLastReadReplaceLastReadLocBtn.disabled = false;
+  useLastReadReplaceLastUsedLocBtn.disabled = false;
 
   updateValuesInTheTextArea (latitude, longitude, replaceLast);
 }
@@ -358,7 +358,7 @@ function init()
     if (state === 'denied')
     {
       for (let el of [watchPositionCb, useLastReadLocBtn, 
-        useLastReadReplaceLastReadLocBtn, readLocBtn, readReplaceLastReadLocBtn])
+        useLastReadReplaceLastUsedLocBtn, readLocBtn, readReplaceLastUsedLocBtn])
       {
         el.disabled = true;
       }
@@ -387,12 +387,12 @@ function init()
   {
     updateValuesInTheTextArea (lastReadPosDetails.latitude, lastReadPosDetails.longitude);
   });
-  ael (useLastReadReplaceLastReadLocBtn, 'click', () =>
+  ael (useLastReadReplaceLastUsedLocBtn, 'click', () =>
   {
     updateValuesInTheTextArea (lastReadPosDetails.latitude, lastReadPosDetails.longitude, true);
   });
   ael (readLocBtn, 'click', captureCurrentLocation);
-  ael (readReplaceLastReadLocBtn, 'click', bindTrailingArgs (captureCurrentLocation, true));
+  ael (readReplaceLastUsedLocBtn, 'click', bindTrailingArgs (captureCurrentLocation, true));
 
   ael (locationInfoTA, 'input', displayAreaInVariousUnits);
   log (`init complete.`);
@@ -413,11 +413,11 @@ function init()
 <table id="buttonsEl">
   <tr>
     <td><button id="useLastReadLocBtn">Use last read</button></td>
-    <td><button id="useLastReadReplaceLastReadLocBtn">Use last read, replace last read</button><br></td>
+    <td><button id="useLastReadReplaceLastUsedLocBtn">Use last read, replace last used</button><br></td>
   </tr>
   <tr>
     <td><button id="readLocBtn">Read</button></td>
-    <td><button id="readReplaceLastReadLocBtn">Read, replace last read</button></td>
+    <td><button id="readReplaceLastUsedLocBtn">Read, replace last used</button></td>
   </tr>
 </table>
 <br><br>
