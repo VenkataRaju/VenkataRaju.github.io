@@ -56,7 +56,7 @@ button:disabled
 { 
   width: 100%;
 }
-#areaInUnitsEl
+#areaInUnitsEl > *
 {
   white-space: pre;
 }
@@ -344,7 +344,7 @@ function init()
   let logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`40init start`);
+  log (`41 init start`);
   (async () =>
   {
     log ('Reading permission....');
