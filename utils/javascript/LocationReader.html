@@ -244,7 +244,7 @@ function updateValuesInTheTextArea (latitude, longitude, replaceLast)
 function displayAreaInVariousUnits ()
 {
   let latLngs = [];
-  for (let numStr of locationInfoTA.value.trim ().split (/[^-\d.]+/).filter (str => str)
+  for (let numStr of locationInfoTA.value.trim ().split (/[^-\d.]+/).filter (str => str))
   {
     log (`numStr: "${numStr}"`);
     let num = +numStr;
