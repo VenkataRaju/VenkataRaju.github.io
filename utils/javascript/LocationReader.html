@@ -244,7 +244,7 @@ function updateValuesInTheTextArea (latitude, longitude, replaceLast)
 function displayAreaInVariousUnits ()
 {
   let latLngs = [];
-  for (let numStr of locationInfoTA.value.trim ().split (/[^-\d.]+/))
+  for (let numStr of locationInfoTA.value.trim ().split (/[^-\d.]+/).filter (str => str)
   {
     log (`numStr: "${numStr}"`);
     let num = +numStr;
@@ -252,7 +252,11 @@ function displayAreaInVariousUnits ()
       return log (`Invalid latitude / longitude number: "${numStr}"`);
     latLngs.push (num);
   }
-   
+
+  if (!latLngs.length)
+    return log (`No valid pairs of latitude and longitude values`);
+  if (latLngs.length < 3)
+    return log (`Needs atleast 2 (currently ${latLngs.length}) valid pairs of latitude and longitude values`);
   if (latLngs.length % 2 !== 0)  
     return log (`Invalid pairs of latitude and longitude. ${latLngs.length} entries.`);
 
@@ -346,7 +350,7 @@ function init()
   let logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`42 init start`);
+  log (`43 init start`);
   (async () =>
   {
     log ('Reading permission....');
