@@ -268,7 +268,7 @@ function displayAreaInVariousUnits ()
     return err (`No valid pairs of latitude and longitude values`);
   if (latLngs.length % 2 !== 0)  
     return err (`Invalid pairs of latitude and longitude. ${latLngs.length} entries.`);
-  if (latLngs.length < 7)
+  if (latLngs.length < 6)
     return err (`Needs atleast 3 (currently ${~~(latLngs.length / 2)}) valid pairs of latitude and longitude values`);
 
   let coordinates = []; 
