@@ -44,10 +44,6 @@ button:disabled
   color: #BBB;
   background: repeating-linear-gradient(0deg, #777, #666, #777);
 }
-/*#watchPositionCb
-{
-  margin-bottom: 1rem;
-}*/
 #buttonsEl
 {
   display: inline-block;
@@ -69,6 +65,10 @@ button:disabled
 #currentLatLngValuesEl > label:first-of-type, #areaInUnitsEl > label:first-of-type
 {
   margin-bottom: 1rem;
+}
+label:has(#lngPosEl, #readTimeEl)/*, #areadInCentsLbl, #areadInSquareMetersLbl*/
+{
+  color: #AAA;
 }
 label:has(#areadInCentsLbl, #areadInSquareMetersLbl), #areadInCentsLbl, #areadInSquareMetersLbl
 {
