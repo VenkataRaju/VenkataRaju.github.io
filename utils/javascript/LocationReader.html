@@ -303,8 +303,8 @@ function displayAreaInVariousUnits ()
   let areaInSquareMeters = calculatePolygonAreaInSquareMeters (coordinates);
 
   /*
-   50,000 m2 ÷ 10,000 = 5 Hectares
-   40,000 m2 ÷ 4,046.85642 = 9.88421526 Acres
+    50,000 m2 / 10,000 = 5 Hectors
+    40,000 m2 / 4,046.85462 = 9.88421526 Aceres
   */
   let acres = areaInSquareMeters / 4046.85642;
   areadInAcresLbl.textContent = `${format (acres)}`;
