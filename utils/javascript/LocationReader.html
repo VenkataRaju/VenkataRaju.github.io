@@ -60,7 +60,7 @@ button:disabled
 { 
   width: 100%;
 }
-#areaInUnitsEl > *
+#currentLatLngValuesEl > *, #areaInUnitsEl > *
 {
   display: block;
   white-space: pre;
@@ -433,13 +433,14 @@ function init()
 <br>
 <label>Geolocation permission: </label><span id="locationPermissionEl">N/A</span>
 <br><br>
-<div class="children-left-align-inline-box">
-<label><input type="checkbox" id="watchPositionCb" /> Watch Position.</label><br>
-<label> Latitude: </label><label id="latPosEl">N/A</label><br>
-<label>Longitude: </label><label id="lngPosEl">N/A</label><br>
-<label>Accuracy:  </label><label id="accuracyEl">N/A</label> meters<br>
+<div id="currentLatLngValuesEl" class="children-left-align-inline-box">
+<label><input type="checkbox" id="watchPositionCb" /> Watch Position.</label>
+<label>Latitude:  </label><label id="latPosEl">N/A</label>
+<label>Longitude: </label><label id="lngPosEl">N/A</label>
+<label>Accuracy:  </label><label id="accuracyEl">N/A</label> meters
 <label>Updated:   </label><label id="readTimeEl">N/A</label>. <label id="readTimeAgoEl">N/A</label>
-</div><br><br>
+</div>
+<br><br>
 <table id="buttonsEl">
   <tr>
     <td><button id="useLastReadLocBtn">Use last read</button></td>
