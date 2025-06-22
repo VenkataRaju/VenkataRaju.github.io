@@ -70,9 +70,9 @@ button:disabled
 {
   margin-bottom: 1rem;
 }
-label:has(#areadInAcresLbl, #areadInHectresLbl), #areadInAcresLbl, #areadInHectresLbl
+label:has(#areadInCentsLbl, #areadInSquareMetersLbl), #areadInCentsLbl, #areadInSquareMetersLbl
 {
-  color: #666;
+  color: #AAA;
 }
 #locationInfoTA, #outputEl
 {
@@ -456,7 +456,7 @@ function init()
 <label id="locationInfoTAErrLbl" class="error"></label>
 <br><br>
 <div id="areaInUnitsEl" class="children-left-align-inline-box">
-  <label>Area in various units: </label>
+  <label>Area in various units:                     </label>
   <label><span id="areadInAcresLbl">N/A</span> Acres</label>
   <label><span id="areadInCentsLbl">N/A</span> Cents</label>
   <label><span id="areadInHectresLbl">N/A</span> Hectors</label>
