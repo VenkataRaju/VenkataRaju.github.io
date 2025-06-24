@@ -231,21 +231,26 @@ function captureCurrentLocation (el, isInit, event, replaceLast)
   geoLoc.getCurrentPosition (successFun, geoLocFailure, geoLocOptions); 
 }
 
-function geoLocSuccess (pos, replaceLast)
+function geoLocSuccess (pos, replaceLast, source)
 {
   let timestamp = pos.timestamp;
-  if (timestamp < (lastReadPosDetails?.timestamp ?? 0))
-    return; // just keep using the latest value
-  let { latitude, longitude, accuracy /* in meters *//*, headingFromNorth, speed *//* in meters */ } = pos.coords;
-  lastReadPosDetails.timestamp = timestamp;
-  lastReadPosDetails.latitude = latitude;
-  lastReadPosDetails.longitude = longitude;
   
-  latPosEl.textContent = latitude;
-  lngPosEl.textContent = longitude;
-  accuracyEl.textContent = accuracy;
-  readTimeEl.textContent = readableTime (timestamp);
-
+  if (timestamp < (lastReadPosDetails?.timestamp ?? 0))
+  {  // just keep using the latest value
+    let { latitude, longitude, accuracy /* in meters *//*, headingFromNorth, speed *//* in meters */ } = pos.coords;
+    lastReadPosDetails.timestamp = timestamp;
+    lastReadPosDetails.latitude = latitude;
+    lastReadPosDetails.longitude = longitude;
+  
+    latPosEl.textContent = latitude;
+    lngPosEl.textContent = longitude;
+    accuracyEl.textContent = accuracy;
+    readTimeEl.textContent = readableTime (timestamp);
+  }
+  
+  if (source === 'WatchPosition')
+    return;
+  
   useLastReadLocBtn.disabled = false;
   useLastReadReplaceLastUsedLocBtn.disabled = false;
 
@@ -258,13 +263,13 @@ function updateValuesInTheTextArea (latitude, longitude, replaceLast)
   {
     let text = locationInfoTA.value, tl = text.length;
     let li = text.lastIndexOf ('\n', tl - 2);
-    if (li !== -1)
-      locationInfoTA.setRangeText ('', li + 1, tl);
+    locationInfoTA.setRangeText ('', li + 1, tl);
   }
   
   locationInfoTA.append (`${latitude} ${longitude}\n`);
   readLocBtn.disabled = false;
-  // displayAreaInVariousUnits ();
+  
+  displayAreaInVariousUnits ();
 }
 
 function displayAreaInVariousUnits ()
@@ -401,7 +406,9 @@ function init()
     }
     locationPermissionEl.textContent = state;
   })();
-  
+
+  {
+  let successFn = bindTrailingArgs (geoLocSuccess, false, 'WatchPosition');
   ael (watchPositionCb, 'change', el =>
   {
     if (timerId)
@@ -413,9 +420,10 @@ function init()
     if (el.checked)
     {
       timerId = setInterval (updateTimeAgo, 400);
-      watchPosId = geoLoc.watchPosition (geoLocSuccess, geoLocFailure, geoLocOptions);
+      watchPosId = geoLoc.watchPosition (successFn, geoLocFailure, geoLocOptions);
     }
   });
+  }
   
   ael (useLastReadLocBtn, 'click', () =>
   {
