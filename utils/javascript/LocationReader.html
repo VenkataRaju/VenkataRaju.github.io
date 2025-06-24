@@ -216,7 +216,7 @@ let geoLoc = navigator.geolocation,
 let geoLocOptions =
 {
   maximumAge: 0 /* no cache */,
-  timeout: 4000 /* millis */,
+  timeout:4600 /* millis */,
   enableHighAccuracy: true /* needed to measure accurate disance, though it consumes more power  */
 };
 
@@ -235,10 +235,10 @@ function geoLocSuccess (pos, replaceLast, source)
   if (timestamp > (lastReadPosDetails?.timestamp ?? 0))
   {  // just keep using the latest value
     let { latitude, longitude, accuracy /* in meters *//*, headingFromNorth, speed *//* in meters */ } = pos.coords;
-    lastReadPosDetails.timestamp = timestamp;
     lastReadPosDetails.latitude = latitude;
     lastReadPosDetails.longitude = longitude;
-  
+    lastReadPosDetails.timestamp = timestamp;
+    
     latPosEl.textContent = latitude;
     lngPosEl.textContent = longitude;
     accuracyEl.textContent = accuracy;
@@ -369,6 +369,7 @@ function geoLocFailure (err)
 {
   log (`An error occured while reaing Geolocation info. Code: "${err.code}", Message: "${err.message}"`);
   readLocBtn.disabled = false;
+  readReplaceLastUsedLocBtn.disabled = false;
 }
 
 function updateTimeAgo ()
@@ -385,10 +386,9 @@ function init()
   let logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`43 init start`);
+  log (`44 init start`);
   (async () =>
   {
-    log ('Reading permission....');
     let result = await navigator.permissions.query ({ name: 'geolocation' });
     let state = result.state;
     if (state === 'denied')
@@ -405,21 +405,22 @@ function init()
   })();
 
   {
-  let successFn = bindTrailingArgs (geoLocSuccess, false, 'WatchPosition');
-  ael (watchPositionCb, 'change', el =>
-  {
-    if (timerId)
+    let successFn = bindTrailingArgs (geoLocSuccess, false, 'WatchPosition');
+    ael (watchPositionCb, 'change', el =>
     {
-      clearInterval (timerId);
-      timerId = 0;
-      geoLoc.clearWatch (watchPosId);
-    }
-    if (el.checked)
-    {
-      timerId = setInterval (updateTimeAgo, 400);
-      watchPosId = geoLoc.watchPosition (successFn, geoLocFailure, geoLocOptions);
-    }
-  });
+      if (timerId)
+      {
+        clearInterval (timerId);
+        timerId = 0;
+        geoLoc.clearWatch (watchPosId);
+        readTimeAgoEl.textContent = 'N/A';
+      }
+      if (el.checked)
+      {
+        timerId = setInterval (updateTimeAgo, 400);
+        watchPosId = geoLoc.watchPosition (successFn, geoLocFailure, geoLocOptions);
+      }
+    });
   }
   
   ael (useLastReadLocBtn, 'click', () =>
