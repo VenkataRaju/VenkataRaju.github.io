@@ -52,7 +52,7 @@ button:disabled
   display: inline-block;
 }
 #buttonsEl td
-{ 
+{
   padding: .2rem;
 }
 #buttonsEl td > button
@@ -241,8 +241,8 @@ function geoLocSuccess (pos, replaceLast)
   lastReadPosDetails.latitude = latitude;
   lastReadPosDetails.longitude = longitude;
   
-  latPostEl.textContent = latitude;
-  lngPostEl.textContent = longitude;
+  latPosEl.textContent = latitude;
+  lngPosEl.textContent = longitude;
   accuracyEl.textContent = accuracy;
   readTimeEl.textContent = readableTime (timestamp);
 
