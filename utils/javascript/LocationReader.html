@@ -371,9 +371,10 @@ function geoLocFailure (err)
 
 function updateTimeAgo ()
 {
-  if (!lastReadPosDetails.timestamp)
+  let ts = lastReadPosDetails.timestamp;
+  if (!ts)
     return;
-  let seconds =  (Date.now () - lastReadPosDetails.timestamp) / 1000;
+  let seconds =  (Date.now () - ts) / 1000;
   readTimeAgoEl.textContent = `${seconds.toFixed (2)} seconds ago`;
 }
   
