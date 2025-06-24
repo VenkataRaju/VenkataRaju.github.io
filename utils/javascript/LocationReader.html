@@ -144,13 +144,13 @@ function readableTime (timestamp = Date.now ())
   return `${padNum (hrs)}:${padNum (mins)}:${padNum (secs)}.${padNum (millis, 3)}`;
 }
 
-function debounce (fun, delay)
+function debounce (fn, delay)
 {
   let id;
   return () =>
   {
     clearTimeout (id);
-    id = setTimeout (fun, delay);
+    id = setTimeout (fn, delay);
   };
 }
 
@@ -180,9 +180,9 @@ function ael (el, eventName, listener, options)
   return listenerWithTry;
 }
 
-function bindTrailingArgs (fun, ...trailingArgs)
+function bindTrailingArgs (fn, ...trailingArgs)
 {
-  return (...args) => fun.call (null, ...args, ...trailingArgs);
+  return (...args) => fn.call (null, ...args, ...trailingArgs);
 }
   
 class Logger
