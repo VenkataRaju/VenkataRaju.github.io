@@ -69,10 +69,7 @@ button:disabled
 {
   margin-bottom: 1rem;
 }
-label:has(#lngPosEl, #readTimeEl), #lngPosEl, #readTimeEl, #readTimeAgoEl
-{
-  color: #AAA;
-}
+label:has(#lngPosEl, #readTimeEl), #lngPosEl, #readTimeEl, #readTimeAgoEl.
 label:has(#areadInCentsLbl, #areadInSquareMetersLbl), #areadInCentsLbl, #areadInSquareMetersLbl
 {
   color: #AAA;
@@ -235,7 +232,7 @@ function geoLocSuccess (pos, replaceLast, source)
 {
   let timestamp = pos.timestamp;
   
-  if (timestamp < (lastReadPosDetails?.timestamp ?? 0))
+  if (timestamp > (lastReadPosDetails?.timestamp ?? 0))
   {  // just keep using the latest value
     let { latitude, longitude, accuracy /* in meters *//*, headingFromNorth, speed *//* in meters */ } = pos.coords;
     lastReadPosDetails.timestamp = timestamp;
@@ -446,11 +443,11 @@ function init()
 <label>Geolocation permission: </label><span id="locationPermissionEl">N/A</span>
 <br><br>
 <div id="currentLatLngValuesEl" class="children-left-align-inline-box">
-<label><input type="checkbox" id="watchPositionCb" /> Watch Position.</label>
-<label>Latitude:  <span id="latPosEl">N/A</span></label>
-<label>Longitude: <span id="lngPosEl">N/A</span></label>
-<label>Accuracy:  <span id="accuracyEl">N/A</span> meters</label>
-<label>Updated:   <span id="readTimeEl">N/A</span>. <span id="readTimeAgoEl">N/A</span></label>
+  <label><input type="checkbox" id="watchPositionCb" /> Watch Position.</label>
+  <label>Latitude:  <span id="latPosEl">N/A</span></label>
+  <label>Longitude: <span id="lngPosEl">N/A</span></label>
+  <label>Accuracy:  <span id="accuracyEl">N/A</span> meters</label>
+  <label>Updated:   <span id="readTimeEl">N/A</span>. <span id="readTimeAgoEl">N/A</span></label>
 </div>
 <br><br>
 <table id="buttonsEl">
