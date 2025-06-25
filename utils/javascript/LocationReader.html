@@ -231,10 +231,10 @@ function captureCurrentLocation (el, isInit, event, replaceLast)
 function geoLocSuccess (pos, replaceLast, source)
 {
   let timestamp = pos.timestamp;
-  
+  let { latitude, longitude, accuracy /* in meters *//*, headingFromNorth, speed *//* in meters */ } = pos.coords;
+ 
   if (timestamp > (lastReadPosDetails?.timestamp ?? 0))
   {  // just keep using the latest value
-    let { latitude, longitude, accuracy /* in meters *//*, headingFromNorth, speed *//* in meters */ } = pos.coords;
     lastReadPosDetails.latitude = latitude;
     lastReadPosDetails.longitude = longitude;
     lastReadPosDetails.timestamp = timestamp;
@@ -391,15 +391,15 @@ function init()
   {
     let result = await navigator.permissions.query ({ name: 'geolocation' });
     let state = result.state;
-    if (state === 'denied')
+    if (state !== 'denied')
     {
       for (let el of [watchPositionCb, useLastReadLocBtn, 
         useLastReadReplaceLastUsedLocBtn, readLocBtn, readReplaceLastUsedLocBtn])
       {
-        el.disabled = true;
+        el.disabled = false;
       }
-      watchPositionCb.parentNode.classList.add ('disabled');
-      locationPermissionEl.classList.add ('error');
+      watchPositionCb.parentNode.classList.remove ('disabled');
+      locationPermissionEl.classList.remove ('error');
     }
     locationPermissionEl.textContent = state;
   })();
@@ -441,10 +441,10 @@ function init()
 </head>
 <body onload="init()">
 <br>
-<label>Geolocation permission: </label><span id="locationPermissionEl">N/A</span>
+<label>Geolocation permission: </label><span id="locationPermissionEl" class="error">N/A</span>
 <br><br>
 <div id="currentLatLngValuesEl" class="children-left-align-inline-box">
-  <label><input type="checkbox" id="watchPositionCb" /> Watch Position.</label>
+  <label><input type="checkbox" id="watchPositionCb" class="disabled" /> Watch Position.</label>
   <label>Latitude:  <span id="latPosEl">N/A</span></label>
   <label>Longitude: <span id="lngPosEl">N/A</span></label>
   <label>Accuracy:  <span id="accuracyEl">N/A</span> meters</label>
@@ -453,12 +453,12 @@ function init()
 <br><br>
 <table id="buttonsEl">
   <tr>
-    <td><button id="useLastReadLocBtn">Use last read</button></td>
-    <td><button id="useLastReadReplaceLastUsedLocBtn">Use last read, replace last used</button><br></td>
+    <td><button id="useLastReadLocBtn" disabled>Add last read</button></td>
+    <td><button id="useLastReadReplaceLastUsedLocBtn" disabled>Replace last used with last read</button><br></td>
   </tr>
   <tr>
-    <td><button id="readLocBtn">Read</button></td>
-    <td><button id="readReplaceLastUsedLocBtn">Read, replace last used</button></td>
+    <td><button id="readLocBtn" disabled>Read. Add</button></td>
+    <td><button id="readReplaceLastUsedLocBtn" disabled>Read. Replace last used</button></td>
   </tr>
 </table>
 <br><br>
