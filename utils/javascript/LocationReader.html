@@ -260,6 +260,7 @@ function updateValuesInTheTextArea (latitude, longitude, replaceLast)
     let text = locationInfoTA.value;
     let li = text.lastIndexOf ('\n', tl - 2);
     locationInfoTA.setRangeText ('', li + 1, tl);
+    tl -= (li + 1);
   }
   
   locationInfoTA.setRangeText (`${latitude} ${longitude}\n`, tl, tl);
