@@ -129,6 +129,11 @@ function padNum (num, numOfDigits = 2, padStr = '0')
   return `${num}`.padStart (numOfDigits, padStr);
 }
 
+function formatNum (num)
+{
+  return num.toFixed (9).padStart (19, ' ');
+}
+
 function readableTime (timestamp = Date.now ())
 {
   let date = new Date (timestamp);
@@ -239,9 +244,9 @@ function geoLocSuccess (pos, replaceLast, source)
     lastReadPosDetails.longitude = longitude;
     lastReadPosDetails.timestamp = timestamp;
     
-    latPosEl.textContent = latitude;
-    lngPosEl.textContent = longitude;
-    accuracyEl.textContent = accuracy;
+    latPosEl.textContent = formatNum (latitude);
+    lngPosEl.textContent = formatNum (longitude);
+    accuracyEl.textContent = formatNum (accuracy);
     readTimeEl.textContent = readableTime (timestamp);
   }
   
