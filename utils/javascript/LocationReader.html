@@ -245,25 +245,24 @@ function geoLocSuccess (pos, replaceLast, source)
     readTimeEl.textContent = readableTime (timestamp);
   }
   
-  if (source === 'WatchPosition')
-    return;
-  
   useLastReadLocBtn.disabled = false;
   useLastReadReplaceLastUsedLocBtn.disabled = false;
 
-  updateValuesInTheTextArea (latitude, longitude, replaceLast);
+  if (source !== 'WatchPosition')
+    updateValuesInTheTextArea (latitude, longitude, replaceLast);
 }
 
 function updateValuesInTheTextArea (latitude, longitude, replaceLast)
 {
+  let tl = locationInfoTA.textLength;
   if (replaceLast)
   {
-    let text = locationInfoTA.value, tl = text.length;
+    let text = locationInfoTA.value;
     let li = text.lastIndexOf ('\n', tl - 2);
     locationInfoTA.setRangeText ('', li + 1, tl);
   }
   
-  locationInfoTA.append (`${latitude} ${longitude}\n`);
+  locationInfoTA.setRangeText (`${latitude} ${longitude}\n`, tl, tl);
   readLocBtn.disabled = false;
   
   displayAreaInVariousUnits ();
