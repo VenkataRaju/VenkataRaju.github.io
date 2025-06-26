@@ -393,11 +393,8 @@ function init()
     let state = result.state;
     if (state !== 'denied')
     {
-      for (let el of [watchPositionCb, useLastReadLocBtn, 
-        useLastReadReplaceLastUsedLocBtn, readLocBtn, readReplaceLastUsedLocBtn])
-      {
+      for (let el of [watchPositionCb, readLocBtn, readReplaceLastUsedLocBtn])
         el.disabled = false;
-      }
       watchPositionCb.parentNode.classList.remove ('disabled');
       locationPermissionEl.classList.remove ('error');
     }
