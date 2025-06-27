@@ -228,8 +228,10 @@ let geoLocOptions =
 let replaceLastGeoLocSuccess = bindTrailingArgs (geoLocSuccess, true);
 function captureCurrentLocation (el, isInit, event, replaceLast)
 {
+  readLocBtn.disabled = false;
+  readReplaceLastUsedLocBtn.disabled = false;
+
   let successFun = replaceLast ? replaceLastGeoLocSuccess : geoLocSuccess;
-  readLocBtn.disabled = true;
   geoLoc.getCurrentPosition (successFun, geoLocFailure, geoLocOptions); 
 }
 
@@ -273,7 +275,8 @@ function updateValuesInTheTextArea (latitude, longitude, replaceLast)
   
   locationInfoTA.setRangeText (`${latitude} ${longitude}\n`, tl, tl);
   
-  // readLocBtn.disabled = false;
+  readLocBtn.disabled = false;
+  readReplaceLastUsedLocBtn.disabled = false;
   
   displayAreaInVariousUnits ();
 }
@@ -437,6 +440,7 @@ function init()
   {
     updateValuesInTheTextArea (lastReadPosDetails.latitude, lastReadPosDetails.longitude, true);
   });
+
   ael (readLocBtn, 'click', captureCurrentLocation);
   ael (readReplaceLastUsedLocBtn, 'click', bindTrailingArgs (captureCurrentLocation, true));
 
