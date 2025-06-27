@@ -129,9 +129,9 @@ function padNum (num, numOfDigits = 2, padStr = '0')
   return `${num}`.padStart (numOfDigits, padStr);
 }
 
-function formatNum (num)
+function formatNum (num, fractionLen = 9, totalLen = 19)
 {
-  return num.toFixed (9).padStart (19, ' ');
+  return num.toFixed (fractionLen).padStart (totalLen, ' ');
 }
 
 function readableTime (timestamp = Date.now ())
@@ -324,13 +324,11 @@ function displayAreaInVariousUnits ()
     40,000 m2 / 4,046.85462 = 9.88421526 Aceres
   */
   let acres = areaInSquareMeters / 4046.85642;
-  areadInAcresLbl.textContent = `${format (acres)}`;
-  areadInCentsLbl.textContent = `${format (acres * 100)}`;
-  areadInHectresLbl.textContent = `${format (areaInSquareMeters / 10000)}`;
-  areadInSquareMetersLbl.textContent = `${format (areaInSquareMeters)}`
+  areadInAcresLbl.textContent = `${formatNum (acres)}`;
+  areadInCentsLbl.textContent = `${formatNum (acres * 100)}`;
+  areadInHectresLbl.textContent = `${formatNum (areaInSquareMeters / 10000)}`;
+  areadInSquareMetersLbl.textContent = `${formatNum (areaInSquareMeters)}`
 
-  function format (num) { return num.toFixed (9).padStart (19, ' '); }
-  
   // The latitude must be a number between -90 and 90 and the longitude between -180 and 180.
   function isValidLatitude (num)
   {
@@ -390,7 +388,7 @@ function updateTimeAgo ()
   if (!ts)
     return;
   let seconds =  (Date.now () - ts) / 1000;
-  readTimeAgoEl.textContent = `${seconds.toFixed (2)} seconds ago`;
+  readTimeAgoEl.textContent = `${formatNum (seconds, 2, 5)} seconds ago`;
 }
   
 function init()
@@ -458,7 +456,7 @@ function init()
   <label>Latitude:  <span id="latPosEl">N/A</span></label>
   <label>Longitude: <span id="lngPosEl">N/A</span></label>
   <label>Accuracy:  <span id="accuracyEl">N/A</span> meters</label>
-  <label>Updated:   <span id="readTimeEl">N/A</span>. <span id="readTimeAgoEl">N/A</span></label>
+  <label>Updated:   <span id="readTimeEl">N/A         </span>. <span id="readTimeAgoEl">N/A              </span></label>
 </div>
 <br><br>
 <table id="buttonsEl">
