@@ -260,12 +260,15 @@ function geoLocSuccess (pos, replaceLast, source)
 function updateValuesInTheTextArea (latitude, longitude, replaceLast)
 {
   let tl = locationInfoTA.textLength;
+  log (`tl: ${tl}`);
   if (replaceLast)
   {
     let text = locationInfoTA.value;
     let li = text.lastIndexOf ('\n', tl - 2);
     locationInfoTA.setRangeText ('', li + 1, tl);
+    log (`li + 1: ${li + 1}, tl: ${tl}`);
     tl -= (li + 1);
+    log (`final tl: ${tl}`);
   }
   
   locationInfoTA.setRangeText (`${latitude} ${longitude}\n`, tl, tl);
