@@ -228,8 +228,8 @@ let geoLocOptions =
 let replaceLastGeoLocSuccess = bindTrailingArgs (geoLocSuccess, true);
 function captureCurrentLocation (el, isInit, event, replaceLast)
 {
-  readLocBtn.disabled = false;
-  readReplaceLastUsedLocBtn.disabled = false;
+  readLocBtn.disabled = true;
+  readReplaceLastUsedLocBtn.disabled = true;
 
   let successFun = replaceLast ? replaceLastGeoLocSuccess : geoLocSuccess;
   geoLoc.getCurrentPosition (successFun, geoLocFailure, geoLocOptions); 
@@ -245,10 +245,10 @@ function geoLocSuccess (pos, replaceLast, source)
     lastReadPosDetails.latitude = latitude;
     lastReadPosDetails.longitude = longitude;
     lastReadPosDetails.timestamp = timestamp;
-    
-    latPosEl.textContent = formatNum (latitude);
-    lngPosEl.textContent = formatNum (longitude);
-    accuracyEl.textContent = formatNum (accuracy);
+
+    latPosEl.textContent = formatNum (latitude, 8, 12);
+    lngPosEl.textContent = formatNum (longitude, 8, 13);
+    accuracyEl.textContent = formatNum (accuracy, 2, 5);
     readTimeEl.textContent = readableTime (timestamp);
   }
   
@@ -262,18 +262,15 @@ function geoLocSuccess (pos, replaceLast, source)
 function updateValuesInTheTextArea (latitude, longitude, replaceLast)
 {
   let tl = locationInfoTA.textLength;
-  log (`tl: ${tl}`);
   if (replaceLast)
   {
     let text = locationInfoTA.value;
     let li = text.lastIndexOf ('\n', tl - 2);
     locationInfoTA.setRangeText ('', li + 1, tl);
-    log (`li + 1: ${li + 1}, tl: ${tl}`);
     tl = li + 1;
-    log (`final tl: ${tl}`);
   }
   
-  locationInfoTA.setRangeText (`${latitude} ${longitude}\n`, tl, tl);
+  locationInfoTA.setRangeText (`${formatNum (latitude, 8, 12)}    ${formatNum (longitude, 8, 13)}\n`, tl, tl);
   
   readLocBtn.disabled = false;
   readReplaceLastUsedLocBtn.disabled = false;
@@ -388,7 +385,7 @@ function updateTimeAgo ()
   if (!ts)
     return;
   let seconds =  (Date.now () - ts) / 1000;
-  readTimeAgoEl.textContent = `${formatNum (seconds, 2, 5)} seconds ago`;
+  readTimeAgoEl.textContent = `. ${formatNum (seconds, 2, 5)} seconds ago`;
 }
   
 function init()
@@ -420,7 +417,7 @@ function init()
         clearInterval (timerId);
         timerId = 0;
         geoLoc.clearWatch (watchPosId);
-        readTimeAgoEl.textContent = 'N/A              ';
+        readTimeAgoEl.textContent = '                   ';
       }
       if (el.checked)
       {
@@ -453,10 +450,10 @@ function init()
 <br><br>
 <div id="currentLatLngValuesEl" class="children-left-align-inline-box">
   <label class="disabled"><input type="checkbox" id="watchPositionCb" class="disabled" disabled /> Watch Position.</label>
-  <label>Latitude:  <span id="latPosEl">N/A</span></label>
-  <label>Longitude: <span id="lngPosEl">N/A</span></label>
-  <label>Accuracy:  <span id="accuracyEl">N/A</span> meters</label>
-  <label>Updated:   <span id="readTimeEl">N/A         </span>. <span id="readTimeAgoEl">N/A              </span></label>
+  <label>Latitude:         <span id="latPosEl">N/A</span></label>
+  <label>Longitude:       <span id="lngPosEl">N/A</span></label>
+  <label>Accuracy:                <span id="accuracyEl">N/A</span> meters</label>
+  <label>Updated:   <span id="readTimeEl">N/A         </span><span id="readTimeAgoEl">                   </span></label>
 </div>
 <br><br>
 <table id="buttonsEl">
