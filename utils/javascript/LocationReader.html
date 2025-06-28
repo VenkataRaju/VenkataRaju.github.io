@@ -248,7 +248,7 @@ function geoLocSuccess (pos, replaceLast, source)
 
     latPosEl.textContent = formatNum (latitude, 8, 12);
     lngPosEl.textContent = formatNum (longitude, 8, 13);
-    accuracyEl.textContent = formatNum (accuracy, 2, 5);
+    accuracyEl.textContent = `${formatNum (accuracy, 2, 5)} meters`;
     readTimeEl.textContent = readableTime (timestamp);
   }
   
@@ -452,7 +452,7 @@ function init()
   <label class="disabled"><input type="checkbox" id="watchPositionCb" class="disabled" disabled /> Watch Position.</label>
   <label>Latitude:         <span id="latPosEl"></span></label>
   <label>Longitude:       <span id="lngPosEl"></span></label>
-  <label>Accuracy:                <span id="accuracyEl"></span> meters</label>
+  <label>Accuracy:                <span id="accuracyEl"></span></label>
   <label>Updated:   <span id="readTimeEl">            </span><span id="readTimeAgoEl">                   </span></label>
 </div>
 <br><br>
