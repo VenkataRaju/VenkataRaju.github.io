@@ -1,0 +1,16 @@
+<iframe id=ifr></iframe>
+<br>
+<span id=log></span>
+<script>
+let url = (content, type) =>
+  URL.createObjectURL (
+    new Blob ([content], {type}));
+
+let cssUrl = url ('#d1 { color: green; }',
+  'text/css');
+let htmlUrl = url (`
+  <link rel=stylesheet href=${cssUrl}>
+  <div id=d1>Div</div>`, 'text/html');
+ifr.src = htmlUrl;
+log.textContent = cssUrl;
+</script>
