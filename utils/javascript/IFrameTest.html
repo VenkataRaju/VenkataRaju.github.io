@@ -2,7 +2,7 @@
 <br>
 <span id=logEl></span>
 <script>
-let log = msg => logEl.append (msg, document.createElement ('br'));
+function log (msg) { logEl.append (msg, document.createElement ('br')); }
 ifr.addEventListener ('load', () => log ('iframe loaded'));
 
 let url = (content, type) =>
@@ -14,7 +14,7 @@ let cssUrl = url ('#d1 { color: green; }',
 let jsUrl = url (`
   try
   {
-    alert (34);
+    alert (35);
     parent.log ('From child');
   }
   catch (err) { d1.textContent += err; }
