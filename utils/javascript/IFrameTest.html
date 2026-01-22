@@ -13,4 +13,5 @@ let htmlUrl = url (`
   <div id=d1>Div</div>`, 'text/html');
 ifr.src = htmlUrl;
 log.textContent = cssUrl;
+ifr.contentWindow.d1.textContent = 'From Parent';  
 </script>
