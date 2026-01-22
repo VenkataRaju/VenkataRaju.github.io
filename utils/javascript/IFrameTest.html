@@ -11,9 +11,14 @@ let url = (content, type) =>
 
 let cssUrl = url ('#d1 { color: green; }',
   'text/css');
+let jsUrl = url (`
+  parent.log ('From child');`,
+  'application/javascript');
+
 let htmlUrl = url (`
   <link rel=stylesheet href=${cssUrl}>
-  <div id=d1>Div 9</div>`, 'text/html');
+  <script src=${jsUrl}><\/script>
+  <div id=d1>Div 10</div>`, 'text/html');
 
 ifr.src = htmlUrl;
 ifr.addEventListener ('load', () =>
@@ -22,7 +27,7 @@ ifr.addEventListener ('load', () =>
   log ('About to update');
   try
   {
-    ifr.contentDocument.getElementById('d1').textContent += 'From Parent';  
+    ifr.contentDocument.getElementById('d1').append (' ', 'From Parent');  
     log ('Updated child div');
   }
   catch (err) { log (`Error "${err}" "${err.stack}"`); }
