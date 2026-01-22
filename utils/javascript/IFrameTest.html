@@ -2,35 +2,41 @@
 <br>
 <span id=logEl></span>
 <script>
-function log (msg) { logEl.append (msg, document.createElement ('br')); }
-ifr.addEventListener ('load', () => log ('iframe loaded'));
+function log (msg)
+{
+  logEl.append (msg, document.createElement ('br'));
+}
 
-let url = (content, type) =>
-  URL.createObjectURL (
-    new Blob ([content], {type}));
+let url = (type, content) => URL.createObjectURL (
+  new Blob ([content], {type}));
 
-let cssUrl = url ('#d1 { color: green; }',
-  'text/css');
-let jsUrl = url (`
+let cssUrl = url ('text/css', '#d1 { color: green; }');
+let jsUrl = url ('application/javascript', `
+  let pl = parent.log;
+  function log (msg)
+  {
+    pl ('Child log: ' + msg);
+  }
   try
   {
-    alert (35);
-    parent.log ('From child');
+    log ('Log entry from child iframe');
   }
-  catch (err) { d1.textContent += err; }
-  `,
-  'application/javascript');
+  catch (err)
+  {
+    d1.append (\`Error calling parent log (): "\${err}". Stack trace: "\${err.stack}"\`);
+  }
+
+  function childFun (msg) { d1.append (document.createElement ('br'), msg); } 
+  `);
 
 let htmlUrl = url (`
   <link rel=stylesheet href=${cssUrl}>
   <script src=${jsUrl} defer><\/script>
-  <div id=d1>Div 12</div>`, 'text/html');
+  <div id=d1>Div 13</div>`, 'text/html');
 
 ifr.src = htmlUrl;
 ifr.addEventListener ('load', () =>
 {
-  log (`html url "${htmlUrl}"`);
-  log ('About to update');
   try
   {
     ifr.contentDocument.getElementById('d1').append (' ', 'From Parent');  
