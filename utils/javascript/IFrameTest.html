@@ -10,13 +10,18 @@ let cssUrl = url ('#d1 { color: green; }',
   'text/css');
 let htmlUrl = url (`
   <link rel=stylesheet href=${cssUrl}>
-  <div id=d1>Div5</div>`, 'text/html');
+  <div id=d1>Div 6</div>`, 'text/html');
 ifr.src = htmlUrl;
-let log = msg => logEl.append (msg, document.createElement ('br'));
-log ('About to update');
-try {
-  ifr.contentDocument.getElementById('d1').textContent = 'From Parent';  
-log ('Updated child div');
-}
-catch (err) { log (`Error ${err}`); }
+setTimeout ( () =>
+{
+  let log = msg => logEl.append (msg, document.createElement ('br'));
+  log (`html url "${htmlUrl}"`);
+  log ('About to update');
+  try
+  {
+    ifr.contentDocument.getElementById('d1').textContent = 'From Parent';  
+    log ('Updated child div');
+  }
+  catch (err) { log (`Error "${err}" "${err.stack}"`); }
+}, 1000);
 </script>
