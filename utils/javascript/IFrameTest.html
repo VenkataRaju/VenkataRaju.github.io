@@ -12,35 +12,36 @@ let url = (type, content) => URL.createObjectURL (
 
 let cssUrl = url ('text/css', '#d1 { color: green; }');
 let jsUrl = url ('text/javascript', `
-  let pl = parent.log;
-  function log (msg)
+  function clog (msg)
   {
-    pl ('Child log: ' + msg);
+    clogEl.append (msg, document.createElement ('br'));
   }
   try
   {
+    let log = parent.log;
     log ('Log entry from child iframe');
   }
   catch (err)
   {
-    // d1.append ('Error calling parent log (): "' + err + '" Stack trace: "' + err.stack + '"');
+    clog ('Error calling parent log (): "' + err + '" Stack trace: "' + err.stack + '"');
   }
 
-  function childFun (msg) { d1.append (document.createElement ('br'), msg); } 
+  function childFun (msg) { clog (msg); } 
   `);
 
-let htmlUrl = url (`
+let htmlUrl = url ('text/html'. `
   <link rel=stylesheet href=${cssUrl}>
   <script src=${jsUrl} defer><\/script>
-  <div id=d1>Div 16</div>`, 'text/html');
+  <div id=d1>Div 17</div>
+  <span id=clogEl></span>>`);
 
 ifr.src = htmlUrl;
 ifr.addEventListener ('load', () =>
 {
   try
   {
-    ifr.contentDocument.getElementById('d1').append (' ', 'From Parent');  
-    log ('Updated child div');
+    let iDoc = ifr.contentDocument;
+    log ('ifr.contentDocument.d1: ' + ifr.contentDocument.d1);
   }
   catch (err) { log (`Error "${err}" "${err.stack}"`); }
 });
