@@ -2,6 +2,9 @@
 <br>
 <span id=logEl></span>
 <script>
+let log = msg => logEl.append (msg, document.createElement ('br'));
+ifr.addEventListener ('load', () => log ('iframe loaded'));
+
 let url = (content, type) =>
   URL.createObjectURL (
     new Blob ([content], {type}));
@@ -10,18 +13,18 @@ let cssUrl = url ('#d1 { color: green; }',
   'text/css');
 let htmlUrl = url (`
   <link rel=stylesheet href=${cssUrl}>
-  <div id=d1>Div 8</div>`, 'text/html');
+  <div id=d1>Div 9</div>`, 'text/html');
+
 ifr.src = htmlUrl;
-setTimeout ( () =>
+ifr.addEventListener ('load', () =>
 {
-  let log = msg => logEl.append (msg, document.createElement ('br'));
   log (`html url "${htmlUrl}"`);
   log ('About to update');
   try
   {
-    ifr.contentDocument.getElementById('d1').textContent = 'From Parent';  
+    ifr.contentDocument.getElementById('d1').textContent += 'From Parent';  
     log ('Updated child div');
   }
   catch (err) { log (`Error "${err}" "${err.stack}"`); }
-}, 1000);
+});
 </script>
