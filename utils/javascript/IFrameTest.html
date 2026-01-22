@@ -1,4 +1,4 @@
-<iframe id=ifr></iframe>
+<iframe id=ifr sandbox="allow-scripts allow-modals allow-same-origin"></iframe>
 <br>
 <span id=logEl></span>
 <script>
@@ -10,7 +10,7 @@ let cssUrl = url ('#d1 { color: green; }',
   'text/css');
 let htmlUrl = url (`
   <link rel=stylesheet href=${cssUrl}>
-  <div id=d1>Div2</div>`, 'text/html');
+  <div id=d1>Div3</div>`, 'text/html');
 ifr.src = htmlUrl;
 let log = msg => logEl.append (msg, document.createElement ('br'));
 log ('About to update');
