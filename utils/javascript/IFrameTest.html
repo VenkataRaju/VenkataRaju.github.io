@@ -23,7 +23,7 @@ let jsUrl = url ('text/javascript', `
   }
   catch (err)
   {
-    d1.append ('Error calling parent log (): "' + err + '" Stack trace: "' + err.stack + '"');
+    // d1.append ('Error calling parent log (): "' + err + '" Stack trace: "' + err.stack + '"');
   }
 
   function childFun (msg) { d1.append (document.createElement ('br'), msg); } 
@@ -32,7 +32,7 @@ let jsUrl = url ('text/javascript', `
 let htmlUrl = url (`
   <link rel=stylesheet href=${cssUrl}>
   <script src=${jsUrl} defer><\/script>
-  <div id=d1>Div 15</div>`, 'text/html');
+  <div id=d1>Div 16</div>`, 'text/html');
 
 ifr.src = htmlUrl;
 ifr.addEventListener ('load', () =>
