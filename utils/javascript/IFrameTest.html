@@ -7,7 +7,7 @@ IFrame:
 {
   margin-bottom: 4rem;
   border: 1px solid gray;
-  width: 100%;
+  width: 100vw;
   height: 10rem;
   padding: .4rem;
 }
@@ -42,7 +42,7 @@ let jsUrl = url ('text/javascript', `
 let htmlUrl = url ('text/html', `
   <link rel=stylesheet href=${cssUrl}>
   <script src=${jsUrl} defer><\/script>
-  <div id=d1 data-xxyy='yyzz'>Div 21</div>
+  <div id=d1 data-xxyy='yyzz'>Div 22</div>
   <span id=clogEl></span>`);
 
 ifr.src = htmlUrl;
