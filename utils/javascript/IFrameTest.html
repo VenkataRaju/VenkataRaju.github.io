@@ -11,7 +11,7 @@ let url = (type, content) => URL.createObjectURL (
   new Blob ([content], {type}));
 
 let cssUrl = url ('text/css', '#d1 { color: green; }');
-let jsUrl = url ('application/javascript', `
+let jsUrl = url ('text/javascript', `
   let pl = parent.log;
   function log (msg)
   {
@@ -32,7 +32,7 @@ let jsUrl = url ('application/javascript', `
 let htmlUrl = url (`
   <link rel=stylesheet href=${cssUrl}>
   <script src=${jsUrl} defer><\/script>
-  <div id=d1>Div 14</div>`, 'text/html');
+  <div id=d1>Div 15</div>`, 'text/html');
 
 ifr.src = htmlUrl;
 ifr.addEventListener ('load', () =>
