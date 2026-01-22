@@ -10,9 +10,10 @@ let cssUrl = url ('#d1 { color: green; }',
   'text/css');
 let htmlUrl = url (`
   <link rel=stylesheet href=${cssUrl}>
-  <div id=d1>Div1</div>`, 'text/html');
+  <div id=d1>Div2</div>`, 'text/html');
 ifr.src = htmlUrl;
-let log = logEl.append (msg, document.createElement ('br'));
+let log = msg => logEl.append (msg, document.createElement ('br'));
+log ('About to update');
 ifr.contentWindow.d1.textContent = 'From Parent';  
 log ('Updated child div');
 </script>
