@@ -32,7 +32,7 @@ let jsUrl = url ('text/javascript', `
 let htmlUrl = url ('text/html'. `
   <link rel=stylesheet href=${cssUrl}>
   <script src=${jsUrl} defer><\/script>
-  <div id=d1>Div 17</div>
+  <div id=d1>Div 18</div>
   <span id=clogEl></span>>`);
 
 ifr.src = htmlUrl;
@@ -42,6 +42,7 @@ ifr.addEventListener ('load', () =>
   {
     let iDoc = ifr.contentDocument;
     log ('ifr.contentDocument.d1: ' + ifr.contentDocument.d1);
+    ifr.contentWindow.childFun ('Calling child ifream childFun () from parent window');
   }
   catch (err) { log (`Error "${err}" "${err.stack}"`); }
 });
