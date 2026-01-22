@@ -14,6 +14,7 @@ let cssUrl = url ('#d1 { color: green; }',
 let jsUrl = url (`
   try
   {
+    alert (34);
     parent.log ('From child');
   }
   catch (err) { d1.textContent += err; }
@@ -23,7 +24,7 @@ let jsUrl = url (`
 let htmlUrl = url (`
   <link rel=stylesheet href=${cssUrl}>
   <script src=${jsUrl} defer><\/script>
-  <div id=d1>Div 11</div>`, 'text/html');
+  <div id=d1>Div 12</div>`, 'text/html');
 
 ifr.src = htmlUrl;
 ifr.addEventListener ('load', () =>
