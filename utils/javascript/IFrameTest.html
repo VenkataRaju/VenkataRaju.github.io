@@ -12,13 +12,18 @@ let url = (content, type) =>
 let cssUrl = url ('#d1 { color: green; }',
   'text/css');
 let jsUrl = url (`
-  parent.log ('From child');`,
+  try
+  {
+    parent.log ('From child');
+  }
+  catch (err) { d1.textContent += err; }
+  `,
   'application/javascript');
 
 let htmlUrl = url (`
   <link rel=stylesheet href=${cssUrl}>
-  <script src=${jsUrl}><\/script>
-  <div id=d1>Div 10</div>`, 'text/html');
+  <script src=${jsUrl} defer><\/script>
+  <div id=d1>Div 11</div>`, 'text/html');
 
 ifr.src = htmlUrl;
 ifr.addEventListener ('load', () =>
