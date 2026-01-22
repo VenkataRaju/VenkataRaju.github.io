@@ -14,6 +14,9 @@ let htmlUrl = url (`
 ifr.src = htmlUrl;
 let log = msg => logEl.append (msg, document.createElement ('br'));
 log ('About to update');
-ifr.contentWindow.d1.textContent = 'From Parent';  
+try {
+  ifr.contentWindow.d1.textContent = 'From Parent';  
 log ('Updated child div');
+}
+carch (err) { log (`Error ${err}`); }
 </script>
