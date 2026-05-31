@@ -1,0 +1,194 @@
+<!doctype html>
+<!-- 0.0001 -->
+<html>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width, initial-scale=1">
+<title>Image Flip Comparison Tool</title>
+<style>
+*, *::before, *::after
+{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: black;
+  color: white;
+}
+
+table
+{
+  margin: .6rem .1rem;
+}
+td:first-child
+{
+  text-align: right;
+  padding-right: .4rem;
+}
+
+#resizeSlider, #opacitySlider
+{
+  width: 20rem;
+}
+
+.img-box
+{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  border: .8rem solid white;
+  border-radius: .4rem;
+  width: 12rem;
+  height: 12rem;
+  cursor: grab;
+}
+
+.grabbing
+{
+  cursor: grabbing;
+}
+
+img
+{
+  max-width: 100%;
+  max-height: 100%;
+  cursor: default;
+}
+
+div:has(#img1)
+{
+  left:  2rem;
+}
+div:has(#img2)
+{
+  left: 18rem;
+  background: transparent;
+}
+#mask
+{
+  left: 34rem;
+  border: .08rem solid white;
+}
+
+#img2
+{
+  transform: scaleX(-1);
+}
+
+</style>
+<script>
+
+document.addEventListener ('DOMContentLoaded', init);
+
+function init ()
+{
+
+let imgUrlOb;
+
+resizeSlider.addEventListener ('input', () =>
+{
+  let nw = img1.naturalWidth;
+  if (!nw)
+    return;
+  let nh = img1.naturalHeight;
+  let min = Math.min (nw, nh);
+  let size = resizeSlider.valueAsNumber;
+  for (let el of [img1.parentNode, img2.parentNode, mask])
+  {
+    let s = el.style;
+    s.width  = `${size * (nw / min) * .2}rem`;
+    s.height = `${size * (nh / min) * .2}rem`;
+  }
+});
+
+opacitySlider.addEventListener ('input', () =>
+{
+  let opacity = opacitySlider.valueAsNumber;
+  img2.style.opacity = opacity;
+});
+
+imgInput.addEventListener ('change', e =>
+{
+  let [file] = e.target.files;
+  if (!file)
+    return;
+  if (imgUrlOb)
+    URL.revokeObjectURL (imgUrlOb);
+  imgUrlOb = URL.createObjectURL (file);
+  img1.src = imgUrlOb;
+  img2.src = imgUrlOb;
+  resizeSlider.disabled = false;
+  opacitySlider.disabled = false;
+});
+
+imgUrlInput.addEventListener ('change', e =>
+{
+  let el = e.target;
+  if (!el.checkValidity())
+    return;
+  let imgUrl = el.value;
+  img1.src = imgUrl;
+  img2.src = imgUrl;
+  resizeSlider.disabled = false;
+  opacitySlider.disabled = false;
+});
+
+for (let el of [img1.parentNode, img2.parentNode, mask])
+  makeThisMovable (el);
+
+function makeThisMovable (el)
+{
+  let s = el.style;
+  
+  let position = getComputedStyle (el).getPropertyValue ('position');
+  if (position !== 'absolute')
+    throw new Error (`Element [tagName: ${el.tagName}, id: ${el.id}] position[${position}] is not absolute`);
+
+  let borderWidthLeft = el.clientLeft;
+  let borderWidthTop  = el.clientTop;
+
+  el.addEventListener ('mousedown', mde =>
+  {
+    if (mde.target !== el)
+      return;
+
+    el.classList.add ('grabbing'); 
+    let offXWithBorder = borderWidthLeft + mde.offsetX;
+    let offYWithBorder = borderWidthTop  + mde.offsetY;
+  
+    let listener = mme =>
+    {
+      s.left = `${mme.pageX - offXWithBorder}px`;
+      s.top  = `${mme.pageY - offYWithBorder}px`;
+    };
+
+    document.addEventListener ('mousemove', listener);
+    document.addEventListener ('mouseup', () => 
+    {
+      document.removeEventListener ('mousemove', listener);
+      el.classList.remove ('grabbing'); 
+    }, { once: true });
+  });
+}
+
+}
+
+</script>
+<body>
+
+<table>
+<tr><td>Select Image:</td><td><input id=imgInput type=file accept="image/*"></td></tr>
+<tr><td>(or) Image URL:</td><td><input id=imgUrlInput type=url></td></tr>
+</table>
+
+<table>
+<tr><td><label>Resize All boxes:</label></td><td><input disabled type=range id=resizeSlider min=0 max=100 value=50 step=1></td></tr>
+<tr><td><label>2nd Image Opacity:</label></td><td><input disabled type=range id=opacitySlider min=0 max=1 value="0.5" step=".01"></td></tr>
+</table>
+
+<div class=img-box><img id=img1></div>
+<div class=img-box><img id=img2></div>
+<span id=mask class=img-box></span>
+
+</body>
+</html>
