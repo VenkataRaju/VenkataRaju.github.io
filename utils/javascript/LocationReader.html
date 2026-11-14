@@ -79,8 +79,9 @@ label:has(#areadInCentsLbl, #areadInSquareMetersLbl), #areadInCentsLbl, #areadIn
 #locationInfoTA, #outputEl
 {
   display: inline-block;
-  width: 80%;
+  width: 90%;
   height: 8rem;
+  margin-left: 0.4rem;
   padding: .4rem;
   border: .2rem solid lightgrey;
   border-radius: .4rem;
@@ -131,7 +132,7 @@ function padNum (num, numOfDigits = 2, padStr = '0')
   return `${num}`.padStart (numOfDigits, padStr);
 }
 
-function formatNum (num, fractionLen = 9, totalLen = 19)
+function formatNum (num, fractionLen = 9, totalLen = 16)
 {
   return num.toFixed (fractionLen).padStart (totalLen, ' ');
 }
@@ -249,7 +250,7 @@ function geoLocSuccess (pos, replaceLast, source)
     lastReadPosDetails.timestamp = timestamp;
 
     latPosEl.textContent = formatNum (latitude, 8, 12);
-    lngPosEl.textContent = formatNum (longitude, 8, 13);
+    lngPosEl.textContent = formatNum (longitude, 8, 12);
     accuracyEl.textContent = `${formatNum (accuracy, 2, 5)} meters`;
     readTimeEl.textContent = readableTime (timestamp);
   }
@@ -272,7 +273,7 @@ function updateValuesInTheTextArea (latitude, longitude, replaceLast)
     tl = li + 1;
   }
   
-  locationInfoTA.setRangeText (`${formatNum (latitude, 8, 12)} ${formatNum (longitude, 8, 13)}\n`, tl, tl);
+  locationInfoTA.setRangeText (`${formatNum (latitude, 8, 12)} ${formatNum (longitude, 8, 12)}\n`, tl, tl);
   
   readLocBtn.disabled = false;
   readReplaceLastUsedLocBtn.disabled = false;
