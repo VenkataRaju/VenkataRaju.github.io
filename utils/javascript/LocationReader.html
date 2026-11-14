@@ -81,7 +81,7 @@ label:has(#areadInCentsLbl, #areadInSquareMetersLbl), #areadInCentsLbl, #areadIn
   display: inline-block;
   width: 90%;
   height: 8rem;
-  margin-left: 0.4rem;
+  float: left;
   padding: .4rem;
   border: .2rem solid lightgrey;
   border-radius: .4rem;
@@ -396,7 +396,7 @@ function init()
   let logger = new Logger (outputEl);
   log = logger.log.bind (logger);
 
-  log (`44 init start`);
+  log (`45 init start`);
   (async () =>
   {
     let result = await navigator.permissions.query ({ name: 'geolocation' });
